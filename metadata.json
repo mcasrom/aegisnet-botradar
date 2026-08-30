@@ -1,0 +1,7 @@
+{
+  "name": "AegisNet-BotRadar",
+  "description": "Plataforma analítica open-source y apartidista para detección temprana de granjas de bots, campañas de desinformación coordinada (CIB) e injerencias electorales.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
