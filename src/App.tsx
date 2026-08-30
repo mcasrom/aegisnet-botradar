@@ -19,6 +19,7 @@ import { ArchitectureModal } from './components/ArchitectureModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
 import { HowToGuideModal } from './components/HowToGuideModal';
 import { AboutModal } from './components/AboutModal';
+import { SystemHealthPanel } from './components/SystemHealthPanel';
 import { Footer } from './components/Footer';
 
 import { DEMO_CAMPAIGNS } from './data/campaigns';
