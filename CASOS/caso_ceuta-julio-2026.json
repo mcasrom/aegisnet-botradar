@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-08-30T21:10:00Z",
+  "generado_utc": "2026-08-30T21:15:00Z",
   "descripcion": "Caso REAL: asalto masivo a la valla de Ceuta (jul 2026). Dataset reconstruido a partir de la documentacion verificada del proyecto (CASOS/ceuta-sucesos-previa.md), con fuentes publicas citadas (Maldita.es '51 bulos...', Newtral, EFE, BBC, Al Arabiya). Cada hallazgo registra fecha, nivel de verificacion (HECHO/HIPOTESIS/PREGUNTA) y fuente real. NO incluye datos inventados.",
   "metodologia": "Los items provienen de verificadores periodisticos publicos que documentaron la campana de desinformacion previa y durante el asalto. La nota metodologica aclara: los canales de campana no estan monitorizados y no hay datos capturados de julio por el pipeline (registra desde 28-ago); la continuidad de amplificadores es PREGUNTA ABIERTA.",
   "entidad": "ceuta",
@@ -273,6 +273,21 @@
       "senal_severa": false,
       "envio_masivo": true,
       "nivel_verificacion": "PREGUNTA",
+      "fecha_evento": "2026-08-25",
+      "ts": "2026-08-25T00:00:00+00:00"
+    },
+    {
+      "tipo": "hipotesis",
+      "canal": "analisis",
+      "titulo": "HIPOTESIS con peso: el 'secreto oficial / materias clasificadas' se usa como amparo que hace NO AUDITABLE publicamente la gestion previa al asalto. Defensa, Interior y la Delegacion del Gobierno se refugian en la clasificacion (informes secretos del CNI, 'los servicios de inteligencia operan de muchas maneras' de Robles), de modo que la ciudadania no puede verificar si hubo aviso ni quien fallo. Patron: responsabilidad diluida entre instituciones bajo secreto.",
+      "url": "https://maldita.es/control-del-poder/20260826/informes-cni-ceuta-robles-marlaska/",
+      "fuente": "Analisis del proyecto a partir de Maldita.es (25-26 ago 2026) y declaraciones publicas de Robles/Marlaska/Delegacion del Gobierno",
+      "entidad": "ceuta",
+      "nombre_entidad": "Ceuta: asalto a la valla de Julio 2026 (caso documentado)",
+      "entidad_region": "Espana",
+      "senal_severa": false,
+      "envio_masivo": false,
+      "nivel_verificacion": "HIPOTESIS",
       "fecha_evento": "2026-08-25",
       "ts": "2026-08-25T00:00:00+00:00"
     }
