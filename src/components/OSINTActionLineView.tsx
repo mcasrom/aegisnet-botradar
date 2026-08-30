@@ -180,55 +180,6 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-[#0A0C10] p-4 sm:p-6 text-[#E2E8F0]">
-      {/* Funnel: qué gestiona la página */}
-      <div className="mb-4 rounded-xl border border-cyan-500/25 bg-gradient-to-r from-[#0B1120] via-cyan-950/30 to-[#0A0C10] p-6 shadow-lg">
-        <div className="flex flex-wrap items-start justify-between gap-6">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <ShieldAlert className="h-5 w-5 text-cyan-400" />
-              <span className="rounded-sm bg-cyan-500/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
-                AegisNet-BotRadar
-              </span>
-              <span className="rounded-sm bg-indigo-500/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-indigo-300">
-                v{version}
-              </span>
-            </div>
-            <h1 className="mt-3 max-w-2xl text-xl font-bold leading-tight text-white sm:text-2xl">
-              Detección temprana de campañas de desinformación coordinada (CIB)
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-300">
-              Esta plataforma monitoriza fuentes abiertas (verificadores, Telegram público, redes sociales),
-              detecta <strong className="text-slate-100">patrones técnicos de coordinación</strong> (duplicación,
-              sincronía temporal, topología) y los presenta con cadena de custodia y matriz de confianza.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-slate-400">
-              <span className="rounded-sm border border-[#1E293B] bg-[#0F172A] px-2 py-1 font-mono">Avisos, no conclusiones</span>
-              <span className="rounded-sm border border-[#1E293B] bg-[#0F172A] px-2 py-1 font-mono">HECHO / HIPÓTESIS / PREGUNTA</span>
-              <span className="rounded-sm border border-[#1E293B] bg-[#0F172A] px-2 py-1 font-mono">SHA-256 · cadena de custodia</span>
-              <span className="rounded-sm border border-[#1E293B] bg-[#0F172A] px-2 py-1 font-mono">Apartidista</span>
-            </div>
-          </div>
-          <div className="flex w-full max-w-md flex-col gap-3">
-            <SystemHealthPanel health={health} isDemo={isDemo ?? true} version={version} />
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={onOpenHowTo}
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-cyan-500 px-4 py-2.5 text-xs font-bold text-[#0A0C10] shadow-md transition-colors hover:bg-cyan-400"
-              >
-                Ver caso &amp; análisis <span aria-hidden>→</span>
-              </button>
-              <a
-                href="#expediente"
-                className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-slate-600 px-4 py-2.5 text-xs font-semibold text-slate-300 transition-colors hover:border-cyan-500/60 hover:text-cyan-300"
-              >
-                Informe Técnico (PDF)
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Top Banner: Action Line Header */}
       <div className="mb-5 flex flex-wrap items-center justify-between gap-4 border-b border-[#1E293B] pb-4">
         <div>

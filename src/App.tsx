@@ -20,6 +20,7 @@ import { HowToGuideModal } from './components/HowToGuideModal';
 import { AboutModal } from './components/AboutModal';
 import { AboutView } from './components/AboutView';
 import { SystemHealthPanel } from './components/SystemHealthPanel';
+import { FunnelBanner } from './components/FunnelBanner';
 import { Footer } from './components/Footer';
 
 import { DEMO_CAMPAIGNS } from './data/campaigns';
@@ -132,6 +133,9 @@ export default function App() {
         onOpenHowTo={() => setIsHowToOpen(true)}
         onOpenAbout={() => setIsAboutOpen(true)}
       />
+
+      {/* Funnel global: qué gestiona la página (visible en todas las tabs) */}
+      <FunnelBanner version={appVersion} campaignTitle={activeCampaign.title} />
 
       {/* Main View Area (Switched by Tabs) */}
       <main className="relative flex flex-1 overflow-hidden">

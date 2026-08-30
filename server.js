@@ -64,6 +64,77 @@ function latestSenaFile() {
 }
 
 /** Archivos de casos documentados (patrón caso_<slug>.json) */
+/** Calcula betweenness centrality y pageRank reales sobre el grafo (BFS por nodo + iteracion) */
+function computeCentrality(nodes, edges) {
+  const ids = nodes.map((n) => n.id);
+  const idx = new Map(ids.map((id, i) => [id, i]));
+  const adj = ids.map(() => []);
+  edges.forEach((e) => {
+    const s = idx.get(e.source);
+    const t = idx.get(e.target);
+    if (s !== undefined && t !== undefined && s !== t) {
+      adj[s].push(t);
+      adj[t].push(s);
+    }
+  });
+  const n = ids.length;
+  const betweenness = new Array(n).fill(0);
+  for (let s = 0; s < n; s++) {
+    const stack = [];
+    const pred = new Array(n).fill(null).map(() => []);
+    const sigma = new Array(n).fill(0);
+    const dist = new Array(n).fill(-1);
+    sigma[s] = 1;
+    dist[s] = 0;
+    const queue = [s];
+    while (queue.length) {
+      const v = queue.shift();
+      stack.push(v);
+      for (const w of adj[v]) {
+        if (dist[w] < 0) {
+          dist[w] = dist[v] + 1;
+          queue.push(w);
+        }
+        if (dist[w] === dist[v] + 1) {
+          sigma[w] += sigma[v];
+          pred[w].push(v);
+        }
+      }
+    }
+    const delta = new Array(n).fill(0);
+    while (stack.length) {
+      const w = stack.pop();
+      for (const v of pred[w]) {
+        delta[v] += (sigma[v] / sigma[w]) * (1 + delta[w]);
+      }
+      if (w !== s) betweenness[w] += delta[w];
+    }
+  }
+  const maxB = n > 2 ? Math.max(...betweenness) : 1;
+  const bNorm = maxB > 0 ? betweenness.map((b) => b / maxB) : betweenness;
+
+  // PageRank iterativo
+  const damping = 0.85;
+  let pr = ids.map(() => 1 / n);
+  for (let iter = 0; iter < 30; iter++) {
+    let next = new Array(n).fill((1 - damping) / n);
+    for (let i = 0; i < n; i++) {
+      const deg = adj[i].length;
+      if (deg > 0) {
+        const share = (damping * pr[i]) / deg;
+        for (const j of adj[i]) next[j] += share;
+      }
+    }
+    pr = next;
+  }
+  const prMax = Math.max(...pr, 1e-9);
+  nodes.forEach((node, i) => {
+    node.centrality.betweenness = Number(bNorm[i].toFixed(4));
+    node.centrality.pageRank = Number((pr[i] / prMax).toFixed(4));
+    node.centrality.degree = edges.filter((e) => e.source === node.id || e.target === node.id).length;
+  });
+}
+
 function listCaseFiles() {
   const dirs = [CASES_DIR, DATOS_DIR];
   for (const dir of dirs) {
@@ -90,13 +161,15 @@ function buildCaseCampaign(file) {
   hallazgos.forEach((h, i) => {
     const key = (h.canal || h.fuente || `fuente_${i}`).toLowerCase().replace(/\s+/g, '-').slice(0, 40) || `canal_${i}`;
     if (!chanMap.has(key)) {
+      const isPregunta = h.nivel_verificacion === 'PREGUNTA';
+      const isHipotesis = h.nivel_verificacion === 'HIPOTESIS';
       chanMap.set(key, {
         id: `node_${slug}_${canonical(key)}`,
         handle: formatHandle(key),
-        platform: h.tipo === 'documentado' || h.tipo === 'contexto' ? 'telegram' : 'x_twitter',
+        platform: h.tipo === 'documentado' || h.tipo === 'contexto' ? 'web' : 'x_twitter',
         displayName: h.canal || key,
-        type: h.señal_severa && !h.nivel_verificacion === 'PREGUNTA' ? 'suspicious' : 'organic',
-        cibScore: h.señal_severa ? 78 : 30,
+        type: isPregunta ? 'suspicious' : isHipotesis ? 'coordinator' : 'organic',
+        cibScore: isPregunta ? 72 : isHipotesis ? 55 : 35,
         creationDate: h.ts || data.generado_utc || new Date().toISOString(),
         accountAgeDays: 0,
         followersCount: 10,
@@ -105,7 +178,7 @@ function buildCaseCampaign(file) {
         totalPosts: 0,
         postsPerDay: 0,
         louvainCommunity: 0,
-        centrality: { degree: 0, betweenness: 0, pageRank: 0.05, clusteringCoefficient: 0 },
+        centrality: { degree: 0, betweenness: 0, pageRank: 0, clusteringCoefficient: 0 },
         temporalMetrics: { medianIntervalSeconds: 0, intervalJitterSeconds: 0, burstCount: 0, nightActivityRatio: 0 },
         contentMetrics: {
           exactCopyPasteRatio: 0,
@@ -153,7 +226,7 @@ function buildCaseCampaign(file) {
       }
     }
   });
-  nodesArr.forEach((n) => (n.centrality.degree = edges.filter((e) => e.source === n.id || e.target === n.id).length));
+  computeCentrality(nodesArr, edges);
   const cib = computeCibFromCampaign(nodesArr, edges);
   return {
     id: slug,
@@ -305,7 +378,7 @@ function buildCampaign(entidad, entData, hallazgos) {
       });
     }
   });
-  nodesArr.forEach((n) => (n.centrality.degree = edges.filter((e) => e.source === n.id || e.target === n.id).length));
+  computeCentrality(nodesArr, edges);
 
   const cib = computeCibFromCampaign(nodesArr, edges);
 
