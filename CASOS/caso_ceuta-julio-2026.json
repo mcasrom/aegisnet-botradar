@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-08-30T20:45:00Z",
+  "generado_utc": "2026-08-30T21:10:00Z",
   "descripcion": "Caso REAL: asalto masivo a la valla de Ceuta (jul 2026). Dataset reconstruido a partir de la documentacion verificada del proyecto (CASOS/ceuta-sucesos-previa.md), con fuentes publicas citadas (Maldita.es '51 bulos...', Newtral, EFE, BBC, Al Arabiya). Cada hallazgo registra fecha, nivel de verificacion (HECHO/HIPOTESIS/PREGUNTA) y fuente real. NO incluye datos inventados.",
   "metodologia": "Los items provienen de verificadores periodisticos publicos que documentaron la campana de desinformacion previa y durante el asalto. La nota metodologica aclara: los canales de campana no estan monitorizados y no hay datos capturados de julio por el pipeline (registra desde 28-ago); la continuidad de amplificadores es PREGUNTA ABIERTA.",
   "entidad": "ceuta",
@@ -260,6 +260,21 @@
       "nivel_verificacion": "PREGUNTA",
       "fecha_evento": "2026-08-28",
       "ts": "2026-08-28T00:00:00+00:00"
+    },
+    {
+      "tipo": "pregunta",
+      "canal": "maldita",
+      "titulo": "PREGUNTA ABIERTA / CONTRADICCION INSTITUCIONAL: ¿informo el CNI del asalto del 30-jul? Tres versiones publicas contradictorias: (1) DEFENSA/Robles 25-ago: el CNI informo verbalmente el dia 29 a la Delegacion del Gobierno ('no hace falta ir a informes manuscritos'); (2) INTERIOR/Marlaska 4-ago y 25-ago: 'no hubo ningun informe ni aviso'; (3) DELEGACION DEL GOBIERNO en Ceuta 25-ago: niega haber recibido informes del CNI y recuerda que no tiene competencias sobre el CNI. No hay evidencia publica de un informe escrito pre-30-jul.",
+      "url": "https://maldita.es/control-del-poder/20260826/informes-cni-ceuta-robles-marlaska/",
+      "fuente": "Maldita.es (25-26 ago 2026) — control del poder: contradicciones Robles/Marlaska/Delegacion sobre el papel del CNI. Contrastar con El Pais y comunicado oficial de la Delegacion del Gobierno en Ceuta.",
+      "entidad": "ceuta",
+      "nombre_entidad": "Ceuta: asalto a la valla de Julio 2026 (caso documentado)",
+      "entidad_region": "Espana",
+      "senal_severa": false,
+      "envio_masivo": true,
+      "nivel_verificacion": "PREGUNTA",
+      "fecha_evento": "2026-08-25",
+      "ts": "2026-08-25T00:00:00+00:00"
     }
   ]
 }
