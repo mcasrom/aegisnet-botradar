@@ -18,6 +18,7 @@ import express from 'express';
 import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join } from 'path';
 import { createHash } from 'crypto';
+import { pathToFileURL } from 'node:url';
 
 const PORT = process.env.PORT || 3789;
 const DATOS_DIR = process.env.DATOS_DIR || join(process.cwd(), 'DATOS');
@@ -493,15 +494,25 @@ if (existsSync(join(DIST_DIR, 'index.html'))) {
   console.log('[aegisnet] warning: DIST_DIR sin index.html (frontend no compilado). Solo API.');
 }
 
-if (process.env.NODE_ENV !== 'test' && !process.argv[1]?.endsWith('server.js')) {
-  console.log('[aegisnet] server.js importado como módulo (test), no se inicia listen');
-} else {
+const isDirectRun = (() => {
+  if (typeof process === 'undefined' || !process.argv || !process.argv[1]) return true;
+  const candidates = [process.argv[1], process.env.pm_exec_path].filter(Boolean);
+  try {
+    return candidates.some((p) => pathToFileURL(p).href === import.meta.url);
+  } catch {
+    return true;
+  }
+})();
+
+if (process.env.NODE_ENV !== 'test' && isDirectRun) {
   app.listen(PORT, () => {
     console.log(`[aegisnet] API real escuchando en :${PORT}`);
     console.log(`[aegisnet] DATOS_DIR=${DATOS_DIR}`);
     const estado = readJson(join(DATOS_DIR, 'estado.json'));
     console.log(`[aegisnet] entidades en estado.json: ${estado?.entidades ? Object.keys(estado.entidades).length : 0}`);
   });
+} else {
+  console.log('[aegisnet] server.js importado como módulo (test), no se inicia listen');
 }
 
 export { listCaseFiles, buildCaseCampaign, listSenalFiles, latestSenaFile, formatHandle, computeCibFromCampaign, canonical, readJson, sha256File };
