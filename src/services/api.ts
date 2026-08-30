@@ -43,13 +43,20 @@ export interface HealthResponse {
 }
 
 export async function apiHealth(): Promise<HealthResponse | null> {
-  try {
-    const r = await fetch(`${API_BASE}/health`, { cache: 'no-store' });
-    if (!r.ok) return null;
-    return (await r.json()) as HealthResponse;
-  } catch {
-    return null;
+  const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const r = await fetch(`${API_BASE}/health`, { cache: 'no-store' });
+      if (r.ok) {
+        const data = (await r.json()) as HealthResponse;
+        if (data && data.ok) return data;
+      }
+    } catch {
+      /* reintentar: el challenge anti-bot de Cloudflare puede responder 403/HTML en el primer intento */
+    }
+    if (attempt < 2) await sleep(900 + attempt * 700);
   }
+  return null;
 }
 
 export async function fetchCampaigns(): Promise<CampaignSummary[]> {

@@ -61,6 +61,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenHowTo }) => {
               aegis.info@viajeinteligencia.com
             </a>
           </div>
+          <span className="hidden text-slate-800 sm:inline">|</span>
+          <a
+            href="https://github.com/mcasrom/aegisnet-botradar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-cyan-300"
+            title="Código abierto en GitHub"
+          >
+            <GitBranch className="h-3.5 w-3.5 text-cyan-400" />
+            <span>Código abierto (GitHub)</span>
+          </a>
         </div>
       </div>
     </footer>
