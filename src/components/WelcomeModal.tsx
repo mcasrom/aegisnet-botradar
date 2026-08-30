@@ -116,7 +116,7 @@ export const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, onN
               onClick={() => go('action')}
               className="flex items-center gap-1.5 rounded-md bg-cyan-500 px-4 py-2 text-xs font-bold text-[#0A0C10] shadow-md transition-colors hover:bg-cyan-400"
             >
-              Ir al caso (Ceuta) <ArrowRight className="h-3.5 w-3.5" />
+              Ver lista de casos <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
         </div>

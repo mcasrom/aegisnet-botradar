@@ -79,7 +79,7 @@ export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTit
             <Cpu className="h-3.5 w-3.5 text-amber-400" /> Score CIB real (server-side)
           </span>
           <span className="flex items-center gap-1.5">
-            <ArrowRight className="h-3.5 w-3.5 text-cyan-400" /> Caso de estudio: asalto a la valla de Ceuta (julio 2026)
+            <ArrowRight className="h-3.5 w-3.5 text-cyan-400" /> Casos en análisis y campañas monitorizadas
           </span>
         </div>
 
