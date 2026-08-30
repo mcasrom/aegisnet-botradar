@@ -5,13 +5,17 @@
 
 import React from 'react';
 import { ShieldAlert, Radar, FileSearch, Scale, ShieldCheck, Cpu, ArrowRight } from 'lucide-react';
+import { SystemHealthPanel } from './SystemHealthPanel';
+import { HealthResponse } from '../services/api';
 
 interface FunnelBannerProps {
   version: string;
   campaignTitle?: string;
+  health?: HealthResponse | null;
+  isDemo?: boolean;
 }
 
-export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTitle }) => {
+export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTitle, health, isDemo }) => {
   return (
     <div className="shrink-0 border-b-2 border-cyan-500/30 bg-gradient-to-r from-[#0B1120] via-[#06253a] to-[#0A0C10] px-4 py-8 sm:px-8">
       <div className="mx-auto max-w-7xl">
@@ -77,6 +81,11 @@ export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTit
           <span className="flex items-center gap-1.5">
             <ArrowRight className="h-3.5 w-3.5 text-cyan-400" /> Caso de estudio: asalto a la valla de Ceuta (julio 2026)
           </span>
+        </div>
+
+        {/* Estado del sistema */}
+        <div className="mt-4">
+          <SystemHealthPanel health={health ?? null} isDemo={isDemo ?? true} version={version} />
         </div>
       </div>
     </div>

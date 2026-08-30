@@ -19,7 +19,6 @@ import { ForensicReportModal } from './components/ForensicReportModal';
 import { HowToGuideModal } from './components/HowToGuideModal';
 import { AboutModal } from './components/AboutModal';
 import { AboutView } from './components/AboutView';
-import { SystemHealthPanel } from './components/SystemHealthPanel';
 import { FunnelBanner } from './components/FunnelBanner';
 import { Footer } from './components/Footer';
 
@@ -120,9 +119,6 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0A0C10] text-[#E2E8F0] font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
-      <div className="px-4 pt-2 sm:px-6">
-        <SystemHealthPanel health={healthInfo} isDemo={isDemo} version={appVersion} />
-      </div>
       {/* Top Navbar with Campaign Selector, CIB Status & Global Actions */}
       <Navbar
         campaigns={campaigns}
@@ -138,7 +134,7 @@ export default function App() {
       />
 
       {/* Funnel global: qué gestiona la página (visible en todas las tabs) */}
-      <FunnelBanner version={appVersion} campaignTitle={activeCampaign.title} />
+      <FunnelBanner version={appVersion} campaignTitle={activeCampaign.title} health={healthInfo} isDemo={isDemo} />
 
       {/* Main View Area (Switched by Tabs) */}
       <main className="relative flex flex-1 overflow-hidden">
