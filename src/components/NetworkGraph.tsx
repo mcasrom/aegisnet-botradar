@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Visualizador Interactivo de Topología de Redes
  * Grafo con renderizado de alto rendimiento en Canvas, simulación física D3,
  * algoritmos de comunidades Louvain y detección visual del patrón Hub-and-Spoke.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';

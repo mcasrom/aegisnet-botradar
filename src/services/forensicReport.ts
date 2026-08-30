@@ -3,7 +3,7 @@
  * Diseñado conforme a estándares procesales y principios de reproducible OSINT:
  * Evidencia empírica -> Inferencia probabilística -> Conclusión limitada -> Salvedades explícitas.
  * 
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import { jsPDF } from 'jspdf';

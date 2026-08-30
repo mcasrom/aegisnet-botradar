@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Módulo de Heurísticas de Comportamiento Temporal
  * Detección de picos de actividad artificial (Burst Analysis), intervalos cronométricos
  * idénticos (Zero-Jitter API Scripting), y ratios anómalos de antigüedad vs volumen.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';

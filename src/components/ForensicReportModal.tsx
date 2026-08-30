@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Generador & Visor de Informes Forenses Auditables
  * Emisión de evidencias abiertas en PDF (5 páginas), CSV primario, GEXF, y STIX 2.1
  * 
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';
@@ -475,7 +475,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#1E293B] bg-[#0F172A] px-6 py-3.5">
           <div className="text-[11px] text-slate-400">
             Copyright © M. Castillo — Contacto del proyecto:{' '}
-            <span className="font-mono text-slate-300">mybloggingnotes@gmail.com</span>
+            <span className="font-mono text-slate-300">aegis.info@viajeinteligencia.com</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">

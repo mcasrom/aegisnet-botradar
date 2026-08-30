@@ -3,7 +3,7 @@
  * ⚠️ ATENCIÓN: Estas campañas son EJEMPLOS ILUSTRATIVOS diseñados para probar la UI del motor.
  * NO son datos de campo capturados. Jamás deben tratarse como evidencia forense.
  * Los datos reales provienen del backend /api/campaigns (pipeline oasis.py).
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 // (Dataset preconfigurado de DEMOSTRACIÓN — cuentas, fechas y métricas son ficticias.)

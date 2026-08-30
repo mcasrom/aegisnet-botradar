@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Aplicación Web Analítica Open-Source y Apartidista
  * Detección temprana de granjas de bots, campañas de desinformación coordinada (CIB)
  * e injerencias en procesos electorales y temáticas críticas.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';

@@ -1,6 +1,6 @@
 /**
  * AegisNet-BotRadar: Barra de Navegación Principal
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React from 'react';

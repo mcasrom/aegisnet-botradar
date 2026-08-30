@@ -3,7 +3,7 @@
  * Documento interactivo y guía completa para operar, calibrar y gestionar
  * la plataforma pericial en investigaciones de fuentes abiertas.
  * 
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState, useMemo } from 'react';
@@ -80,7 +80,7 @@ export const HowToGuideModal: React.FC<HowToGuideModalProps> = ({
     const rawMarkdown = `# MANUAL DE OPERACIÓN Y GESTIÓN OPERATIVA
 ## AegisNet-BotRadar: Plataforma Técnica OSINT para Detección y Mitigación de CIB
 Versión 2.0 | Guía de Procedimientos para Equipos e Investigadores de Fuentes Abiertas
-Copyright © M. Castillo — Contacto: mybloggingnotes@gmail.com
+Copyright © M. Castillo — Contacto: aegis.info@viajeinteligencia.com
 
 ---
 

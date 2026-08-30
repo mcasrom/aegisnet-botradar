@@ -1,6 +1,6 @@
 /**
  * AegisNet-BotRadar: Pie de Página Institucional
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React from 'react';
@@ -55,10 +55,10 @@ export const Footer: React.FC<FooterProps> = ({ onOpenHowTo }) => {
           <div>
             <span>Contacto:</span>{' '}
             <a
-              href="mailto:mybloggingnotes@gmail.com"
+              href="mailto:aegis.info@viajeinteligencia.com"
               className="font-mono text-indigo-400 underline decoration-indigo-500/40 hover:text-indigo-300"
             >
-              mybloggingnotes@gmail.com
+              aegis.info@viajeinteligencia.com
             </a>
           </div>
         </div>

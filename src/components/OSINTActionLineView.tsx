@@ -3,7 +3,7 @@
  * Guía metodológica, matriz de decisión, reporte a plataformas (Trust & Safety)
  * y protocolo de mitigación pericial para analistas e investigadores de fuentes abiertas.
  * 
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';

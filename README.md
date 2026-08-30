@@ -4,7 +4,7 @@ Plataforma analítica **open-source y apartidista** para la detección temprana 
 bots y campañas de desinformación coordinada (CIB / Coordinated Inauthentic Behavior) en redes
 digitales (X/Twitter, Telegram, Meta, YouTube).
 
-**Contacto:** [mybloggingnotes@gmail.com](mailto:mybloggingnotes@gmail.com)
+**Contacto:** [aegis.info@viajeinteligencia.com](mailto:aegis.info@viajeinteligencia.com)
 
 ---
 

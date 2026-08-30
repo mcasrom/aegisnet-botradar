@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Módulo de PLN y Detección Técnica de Desinformación
  * Análisis semántico, similitud léxica (Jaccard / Levenshtein), astroturfing masivo
  * y descontextualización multimedia con estricta neutralidad ideológica.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';

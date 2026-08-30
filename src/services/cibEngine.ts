@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Motor Analítico de Coordinación Inauténtica (CIB Engine)
  * Algoritmos de Topología de Redes (Graph Theory), Heurísticas Temporales y Similitud PLN.
  * Enfoque rigurosamente apartidista: Evalúa únicamente patrones de coordinación técnica.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import { SocialAccountNode, NetworkEdge, CIBBreakdown } from '../types/botradar';

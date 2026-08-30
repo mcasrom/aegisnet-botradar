@@ -1,7 +1,7 @@
 /**
  * AegisNet-BotRadar: Especificación de Arquitectura de Software Open-Source
  * Backend Python (FastAPI), Base de Datos Vectorial y Relacional (PostgreSQL + pgvector).
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';
@@ -38,7 +38,7 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
       code: `"""
 AegisNet-BotRadar: FastAPI Core Gateway
 Endpoints de análisis CIB, detección de comunidades y orquestación de ingesta.
-Copyright © M. Castillo - Contacto: mybloggingnotes@gmail.com
+Copyright © M. Castillo - Contacto: aegis.info@viajeinteligencia.com
 """
 
 from fastapi import FastAPI, BackgroundTasks, Depends, HTTPException
@@ -102,7 +102,7 @@ if __name__ == "__main__":
       code: `"""
 AegisNet-BotRadar: Motor de Puntuación CIB Ponderada (0 a 100)
 Evaluación técnica matemática estrictamente apartidista e independiente.
-Copyright © M. Castillo - Contacto: mybloggingnotes@gmail.com
+Copyright © M. Castillo - Contacto: aegis.info@viajeinteligencia.com
 """
 
 import numpy as np
@@ -159,7 +159,7 @@ class CIBScoringEngine:
       code: `"""
 AegisNet-BotRadar: Algoritmos de Topología de Redes (Graph Theory)
 Detección de comunidades Louvain (Modularidad Q) y métricas de centralidad con NetworkX.
-Copyright © M. Castillo - Contacto: mybloggingnotes@gmail.com
+Copyright © M. Castillo - Contacto: aegis.info@viajeinteligencia.com
 """
 
 import networkx as nx
@@ -259,7 +259,7 @@ CREATE INDEX ON social_posts USING ivfflat (text_embedding vector_cosine_ops) WI
       code: `"""
 AegisNet-BotRadar: Conectores API Multicanal Asíncronos
 Integración con X/Twitter API v2, Telegram Telethon MTProto, Meta y YouTube.
-Copyright © M. Castillo - Contacto: mybloggingnotes@gmail.com
+Copyright © M. Castillo - Contacto: aegis.info@viajeinteligencia.com
 """
 
 import asyncio

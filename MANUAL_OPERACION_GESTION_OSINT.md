@@ -2,7 +2,7 @@
 ## AegisNet-BotRadar: Plataforma Pericial OSINT para Detección y Mitigación de Comportamiento Inauténtico Coordinado (CIB)
 **Versión del Manual:** 2.0 (Edición Pericial para Equipos e Investigadores OSINT)  
 **Clasificación:** Protocolo de Fuentes Abiertas / Distribución Técnica  
-**Autoría y Arquitectura:** M. Castillo — Contacto: `mybloggingnotes@gmail.com`  
+**Autoría y Arquitectura:** M. Castillo — Contacto: `aegis.info@viajeinteligencia.com`  
 
 ---
 
@@ -179,5 +179,5 @@ En eventos reales (manifestaciones, partidos, conciertos), miles de usuarios leg
 ## 5. CONTACTO Y ASISTENCIA TÉCNICA
 Para consultas metodológicas, auditorías conjuntas de campañas o aportación de nuevos conectores OSINT:
 * **Director de Arquitectura y Análisis:** M. Castillo
-* **Correo Electrónico de Contacto Pericial:** `mybloggingnotes@gmail.com`
+* **Correo Electrónico de Contacto Pericial:** `aegis.info@viajeinteligencia.com`
 * **Licencia de Uso:** Protocolo de Fuentes Abiertas para Fines de Investigación, Verificación Periodística y Defensa de la Integridad Democrática.

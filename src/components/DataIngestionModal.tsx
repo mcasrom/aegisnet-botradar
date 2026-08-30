@@ -3,7 +3,7 @@
  * Ingesta de datasets forenses brutos (JSON / CSV), cálculo algorítmico en cliente
  * de métricas CIB (Jaccard, ráfagas temporales y topología) y conectores CLI.
  * 
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState, useRef } from 'react';

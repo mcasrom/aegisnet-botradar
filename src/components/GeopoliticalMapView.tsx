@@ -2,7 +2,7 @@
  * AegisNet-BotRadar: Mapa Geopolítico y Temático de Desinformación
  * Visualización interactiva de procedencia de infraestructura (ASNs, Proxies, Granjas),
  * vectores transfronterizos hacia procesos electorales e idiomas predominantes.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 import React, { useState } from 'react';

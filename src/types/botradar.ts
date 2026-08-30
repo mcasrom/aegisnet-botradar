@@ -1,7 +1,7 @@
 /**
  * AegisNet-BotRadar: Sistema Analítico Open-Source y Apartidista
  * Definiciones de tipos para topología de redes, métricas CIB, heurísticas temporales y PLN.
- * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
+ * Copyright © M. Castillo — Contacto: mailto:aegis.info@viajeinteligencia.com
  */
 
 export type PlatformType = 'x_twitter' | 'telegram' | 'meta' | 'youtube';
