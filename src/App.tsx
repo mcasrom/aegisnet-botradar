@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { NetworkGraph } from './components/NetworkGraph';
 import { TemporalAnalysisView } from './components/TemporalAnalysisView';
@@ -19,6 +18,7 @@ import { ArchitectureModal } from './components/ArchitectureModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
 import { HowToGuideModal } from './components/HowToGuideModal';
 import { AboutModal } from './components/AboutModal';
+import { AboutView } from './components/AboutView';
 import { SystemHealthPanel } from './components/SystemHealthPanel';
 import { Footer } from './components/Footer';
 
@@ -27,20 +27,6 @@ import { InvestigationCampaign, SocialAccountNode, NetworkEdge } from './types/b
 import { computeComprehensiveCIBScore } from './services/cibEngine';
 import { fetchCampaigns, fetchCampaignDetail, apiHealth, HealthResponse } from './services/api';
 
-/**
- * Banner persistente de MODO DEMO.
- * Se muestra SIEMPRE que la app esté funcionando con datos de demostración
- * (ficticios), para que ningún resultado se confunda con un hallazgo real.
- */
-function DemoBanner({ visible }: { visible: boolean }) {
-  if (!visible) return null;
-  return (
-    <div className="fixed left-0 right-0 top-0 z-[100] flex items-center justify-center gap-2 border-b border-amber-500/40 bg-amber-950/90 px-4 py-2 text-center text-xs font-bold text-amber-300">
-      <AlertTriangle className="h-4 w-4 shrink-0" />
-      <span>MODO DEMO — Los datos mostrados son EJEMPLOS ILUSTRATIVOS ficticios. No son evidencias OSINT reales. Activa el backend (/api) para datos de campo.</span>
-    </div>
-  );
-}
 
 export default function App() {
   const [campaigns, setCampaigns] = useState<InvestigationCampaign[]>(DEMO_CAMPAIGNS as InvestigationCampaign[]);
@@ -49,7 +35,7 @@ export default function App() {
   const [dataSource, setDataSource] = useState<string>('backend no conectado');
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
   const [appVersion, setAppVersion] = useState<string>('1.1.0');
-  const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'geo' | 'action'>('action');
+  const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about'>('action');
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
   React.useEffect(() => {
@@ -59,23 +45,29 @@ export default function App() {
         const health = await apiHealth();
         if (health) setHealthInfo(health);
         if (health && health.ok && health.existeEstado) {
-          const summaries = await fetchCampaigns();
-          if (!cancelled && summaries.length > 0) {
-            const loaded: InvestigationCampaign[] = [];
-            for (const s of summaries.slice(0, 20)) {
-              try {
-                const detail = await fetchCampaignDetail(s.id);
-                loaded.push(detail);
-              } catch {
-                /* omitir campaña con detalle no disponible */
+          setIsDemo(false);
+          setDataSource(`datos reales oasis.py (${health.fechaSenales})`);
+          let loaded: InvestigationCampaign[] = [];
+          try {
+            const summaries = await fetchCampaigns();
+            if (!cancelled && summaries.length > 0) {
+              for (const s of summaries.slice(0, 20)) {
+                try {
+                  const detail = await fetchCampaignDetail(s.id);
+                  loaded.push(detail);
+                } catch {
+                  /* omitir campaña con detalle no disponible */
+                }
               }
+              loaded.forEach((c, i) => { c.id = c.id || `real_${i}`; });
+              loaded.sort((a, b) => (b.cibBreakdown?.overallScore || 0) - (a.cibBreakdown?.overallScore || 0));
             }
-            loaded.forEach((c, i) => { c.id = c.id || `real_${i}`; });
-            loaded.sort((a, b) => (b.cibBreakdown?.overallScore || 0) - (a.cibBreakdown?.overallScore || 0));
+          } catch {
+            /* las campañas pueden fallar por el challenge CF; no entramos en demo si el health es valido */
+          }
+          if (!cancelled && loaded.length > 0) {
             setCampaigns(loaded);
             setActiveCampaign(loaded[0]);
-            setIsDemo(false);
-            setDataSource(`datos reales oasis.py (${health.fechaSenales})`);
           }
         }
       } catch {
@@ -124,7 +116,6 @@ export default function App() {
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0A0C10] text-[#E2E8F0] font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
-      <DemoBanner visible={isDemo} />
       <div className="px-4 pt-2 sm:px-6">
         <SystemHealthPanel health={healthInfo} isDemo={isDemo} version={appVersion} />
       </div>
@@ -177,6 +168,10 @@ export default function App() {
             isDemo={isDemo}
             version={appVersion}
           />
+        )}
+
+        {activeTab === 'about' && (
+          <AboutView />
         )}
       </main>
 

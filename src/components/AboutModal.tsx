@@ -11,31 +11,9 @@ interface AboutModalProps {
   onClose: () => void;
 }
 
-export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null;
+export const AboutContent: React.FC = () => {
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-y-auto rounded-lg border border-[#1E293B] bg-[#0A0C10] shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#1E293B] px-6 py-4">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-sm border border-cyan-500/40 bg-cyan-950/40 text-cyan-400">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold tracking-tight text-white">AegisNet-BotRadar</h2>
-              <p className="text-[11px] text-slate-400">Plataforma OSINT de detección de campañas de desinformación coordinada (CIB)</p>
-            </div>
-          </div>
-          <button type="button" onClick={onClose} className="rounded-sm p-1.5 text-slate-400 hover:bg-[#1E293B] hover:text-white transition-colors" aria-label="Cerrar">
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="space-y-5 px-6 py-5 text-sm text-slate-300">
+    <div className="space-y-5 px-6 py-5 text-sm text-slate-300">
           {/* Sobre el proyecto */}
           <section>
             <div className="flex items-center gap-2 text-cyan-400">
@@ -133,6 +111,32 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
             </div>
           </section>
         </div>
+  );
+};
+
+export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="flex max-h-[88vh] w-full max-w-3xl flex-col overflow-y-auto rounded-lg border border-[#1E293B] bg-[#0A0C10] shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-[#1E293B] px-6 py-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-sm border border-cyan-500/40 bg-cyan-950/40 text-cyan-400">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold tracking-tight text-white">AegisNet-BotRadar</h2>
+              <p className="text-[11px] text-slate-400">Plataforma OSINT de detección de campañas de desinformación coordinada (CIB)</p>
+            </div>
+          </div>
+          <button type="button" onClick={onClose} className="rounded-sm p-1.5 text-slate-400 hover:bg-[#1E293B] hover:text-white transition-colors" aria-label="Cerrar">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <AboutContent />
       </div>
     </div>
   );

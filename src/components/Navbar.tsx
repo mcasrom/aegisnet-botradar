@@ -36,8 +36,8 @@ interface NavbarProps {
   campaigns: InvestigationCampaign[];
   activeCampaign: InvestigationCampaign;
   onSelectCampaign: (campaign: InvestigationCampaign) => void;
-  activeTab: 'graph' | 'temporal' | 'nlp' | 'geo' | 'action';
-  onChangeTab: (tab: 'graph' | 'temporal' | 'nlp' | 'geo' | 'action') => void;
+  activeTab: 'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about';
+  onChangeTab: (tab: 'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about') => void;
   onOpenIngestion: () => void;
   onOpenArchitecture: () => void;
   onOpenReportModal: () => void;
@@ -259,19 +259,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>Semántica & pHash</span>
           </button>
 
-          <button
-            id="tab-geo"
-            onClick={() => onChangeTab('geo')}
-            className={`flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-xs font-medium transition-all ${
-              activeTab === 'geo'
-                ? 'bg-indigo-900/40 text-indigo-300 border border-indigo-500/30 shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            <Globe className="h-3.5 w-3.5" />
-            <span>Mapa Geopolítico</span>
-          </button>
-
           {/* New Tab: Línea de Acción OSINT */}
           <button
             id="tab-action-line"
@@ -288,6 +275,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="ml-0.5 rounded-full bg-cyan-500/20 px-1.5 py-0.2 text-[9px] font-mono font-black text-cyan-300 border border-cyan-500/40">
               PLAYBOOK
             </span>
+          </button>
+
+          {/* Tab: Metodología & Fuentes */}
+          <button
+            id="tab-about"
+            onClick={() => onChangeTab('about')}
+            className={`flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-xs font-bold transition-all ${
+              activeTab === 'about'
+                ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/30'
+                : 'text-emerald-400 hover:text-emerald-200 hover:bg-emerald-950/20'
+            }`}
+            title="Metodología de detección y fuentes de verificación"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Metodología &amp; Fuentes</span>
           </button>
         </div>
 
