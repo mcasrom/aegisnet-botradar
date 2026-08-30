@@ -15,6 +15,13 @@ tabla de eventos primarios, y etiqueta "Crítico/Severo" para CIB 40.
 
 ---
 
+## PRIORIDAD 0 — UX: la vista de Línea de Acción OSINT (scroll)
+
+| # | Tarea | Detalle | Aceptación |
+|---|---|---|---|
+| U1 | **Eliminar el scroll que "esconde" el contenido** | La vista de Línea de Acción OSINT muestra el contenido en una zona estrecha que obliga a scroll excesivo; el contenido parece "escondido". Rediseñar: panel de fases compacto, checklist en grid-2 (ya hecho parcialmente), y que la fase activa ocupe el ancho sin requerir scroll vertical para ver lo esencial. | El contenido esencial (caso, CIB, checklist) visible sin scroll; solo scroll para profundizar |
+| U2 | **Fases como pestañas desplegables** | En vez de una sola fase larga a la vez con todo apilado, mostrar las 5 fases como pestañas/accordion colapsadas para navegar sin scroll largo. | Navegación por fases sin scroll excesivo |
+
 ## PRIORIDAD 1 — Hacer el PDF reproducible (bloquea todo lo demás)
 
 | # | Tarea | Detalle | Aceptación |
