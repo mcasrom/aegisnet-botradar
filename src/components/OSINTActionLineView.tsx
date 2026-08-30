@@ -264,7 +264,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
             <h3 className="text-sm font-bold tracking-tight text-cyan-200">Matriz de Confianza</h3>
             <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">nivel de verificación de los hallazgos</span>
           </div>
-          <div className="space-y-2.5">
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
             {campaign.confidenceMatrix.map((cm, i) => {
               const lvl = cm.confidenceLevel || 'UNKNOWN_UNVERIFIED';
               const cfg =
@@ -342,9 +342,9 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
       </div>
 
       {/* Detailed Phase Interactive View */}
-      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Left 2 Cols: Selected Phase Deep-Dive */}
-        <div className="space-y-4 lg:col-span-2">
+      <div className="mb-6 grid grid-cols-1 gap-6">
+        {/* Full width: Selected Phase Deep-Dive */}
+        <div className="space-y-4">
           {selectedPhase === 1 && (
             <div className="rounded-sm border border-[#1E293B] bg-[#111827] p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E293B] pb-3">
@@ -359,7 +359,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
                 Antes de emitir cualquier alerta pública o notificación que alerte a los operadores de la red y motive el borrado masivo de publicaciones, el grupo OSINT debe asegurar la inmutabilidad física y criptográfica de las evidencias recolectadas.
               </p>
 
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
                 <div className="rounded-sm border border-[#1E293B] bg-[#0A0C10] p-3 space-y-1">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-slate-200">1. Cálculo de Hash SHA-256 del Dataset Bruto:</span>
@@ -529,7 +529,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
                 Si la campaña persigue desestabilización electoral, alteración del orden público o delitos de odio organizados, el informe debe estructurarse conforme a la norma <strong>ISO/IEC 27037</strong> (directrices para la identificación, recogida, adquisición y preservación de evidencias digitales).
               </p>
 
-              <div className="space-y-2.5">
+              <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
                 <div className="rounded-sm border border-[#1E293B] bg-[#0A0C10] p-3 text-xs space-y-1">
                   <span className="font-bold text-slate-200">Requisitos para Admisión Judicial:</span>
                   <ul className="list-disc pl-4 space-y-1 text-slate-400 text-[11px]">
