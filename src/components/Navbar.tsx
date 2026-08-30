@@ -17,7 +17,8 @@ import {
   AlertTriangle,
   Plus,
   BookOpen,
-  FlaskConical
+  FlaskConical,
+  ShieldCheck
 } from 'lucide-react';
 import { InvestigationCampaign } from '../types/botradar';
 
@@ -41,6 +42,7 @@ interface NavbarProps {
   onOpenArchitecture: () => void;
   onOpenReportModal: () => void;
   onOpenHowTo: () => void;
+  onOpenAbout: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -52,7 +54,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenIngestion,
   onOpenArchitecture,
   onOpenReportModal,
-  onOpenHowTo
+  onOpenHowTo,
+  onOpenAbout
 }) => {
   const cib = activeCampaign.cibBreakdown;
 
@@ -321,6 +324,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BookOpen className="h-3.5 w-3.5 text-emerald-400" />
             <span>Guía HOW-TO</span>
+          </button>
+
+          {/* About / Metodología y fuentes */}
+          <button
+            id="btn-about"
+            onClick={onOpenAbout}
+            className="flex items-center gap-1.5 rounded-sm border border-cyan-500/30 bg-cyan-950/20 px-3 py-1.5 text-xs font-semibold text-cyan-300 transition-colors hover:border-cyan-500/60 hover:bg-cyan-950/40 shadow-sm"
+            title="Sobre el proyecto, metodología y fuentes"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
+            <span>About</span>
           </button>
 
           {/* Forensic Report Generator */}

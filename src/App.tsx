@@ -18,6 +18,7 @@ import { DataIngestionModal } from './components/DataIngestionModal';
 import { ArchitectureModal } from './components/ArchitectureModal';
 import { ForensicReportModal } from './components/ForensicReportModal';
 import { HowToGuideModal } from './components/HowToGuideModal';
+import { AboutModal } from './components/AboutModal';
 import { Footer } from './components/Footer';
 
 import { DEMO_CAMPAIGNS } from './data/campaigns';
@@ -86,6 +87,7 @@ export default function App() {
   const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isHowToOpen, setIsHowToOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   // Handle adding newly ingested streaming nodes from Multi-API connector
   const handleAddIngestedNodes = (newNodes: SocialAccountNode[], newEdges: NetworkEdge[]) => {
@@ -130,6 +132,7 @@ export default function App() {
         onOpenArchitecture={() => setIsArchitectureOpen(true)}
         onOpenReportModal={() => setIsReportModalOpen(true)}
         onOpenHowTo={() => setIsHowToOpen(true)}
+        onOpenAbout={() => setIsAboutOpen(true)}
       />
 
       {/* Main View Area (Switched by Tabs) */}
@@ -202,6 +205,11 @@ export default function App() {
         onClose={() => setIsHowToOpen(false)}
         onNavigateToActionLine={() => setActiveTab('action')}
         onOpenIngestion={() => setIsIngestionOpen(true)}
+      />
+
+      <AboutModal
+        isOpen={isAboutOpen}
+        onClose={() => setIsAboutOpen(false)}
       />
     </div>
   );
