@@ -51,7 +51,6 @@ explícitamente.
 ## Requisitos
 
 - Node.js 18+
-- (Opcional) `GEMINI_API_KEY` para futuras capacidades del asistente — **sin usar hoy**.
 
 ## Ejecución local
 
