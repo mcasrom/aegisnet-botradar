@@ -172,6 +172,42 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto bg-[#0A0C10] p-4 sm:p-6 text-[#E2E8F0]">
+      {/* CTA Hero */}
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-4 rounded-lg border border-indigo-500/30 bg-gradient-to-r from-indigo-950/60 via-[#0A0C10] to-[#0A0C10] px-5 py-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            <span className="rounded-sm bg-indigo-500/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-indigo-300">
+              Caso de estudio
+            </span>
+            <span className="rounded-sm bg-cyan-500/20 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-cyan-300">
+              Datos verificados
+            </span>
+          </div>
+          <h2 className="mt-2 text-base font-bold leading-snug text-white sm:text-lg">
+            Explora el caso real del asalto a la valla de Ceuta (julio 2026)
+          </h2>
+          <p className="mt-1 text-xs text-slate-400">
+            Campaña de desinformación coordinada documentada por verificadores públicos — con cadena de custodia y matriz de confianza.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenHowTo}
+            className="flex items-center gap-1.5 rounded-md bg-cyan-500 px-4 py-2 text-xs font-bold text-[#0A0C10] shadow-md transition-colors hover:bg-cyan-400"
+          >
+            Ver caso &amp; análisis
+            <span aria-hidden>→</span>
+          </button>
+          <a
+            href="#expediente"
+            className="flex items-center gap-1.5 rounded-md border border-slate-600 px-4 py-2 text-xs font-semibold text-slate-300 transition-colors hover:border-cyan-500/60 hover:text-cyan-300"
+          >
+            Informe Técnico (PDF)
+          </a>
+        </div>
+      </div>
+
       {/* Top Banner: Action Line Header */}
       <div className="mb-5 flex flex-wrap items-center justify-between gap-4 border-b border-[#1E293B] pb-4">
         <div>
@@ -227,7 +263,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
       </div>
 
       {/* Case Briefing Strip */}
-      <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4 rounded-sm border border-[#1E293B] bg-[#0F172A] p-3.5 text-xs">
+      <div id="expediente" className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4 rounded-sm border border-[#1E293B] bg-[#0F172A] p-3.5 text-xs">
         <div>
           <span className="block text-[10px] font-mono uppercase text-slate-400">Expediente Técnico</span>
           <span className="font-mono font-bold text-cyan-400">{campaign.investigationCode}</span>

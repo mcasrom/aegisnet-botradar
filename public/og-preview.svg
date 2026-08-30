@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1050" cy="80" r="240" fill="#22d3ee" opacity="0.05"/>
+  <circle cx="1050" cy="80" r="160" fill="#22d3ee" opacity="0.06"/>
+  <path d="M130 150 L590 150 L450 250 L600 340 L400 340 L250 470 L300 340 L130 340 Z" fill="none" stroke="url(#shield)" stroke-width="14"/>
+  <circle cx="380" cy="255" r="48" fill="none" stroke="#22d3ee" stroke-width="8"/>
+  <circle cx="380" cy="255" r="16" fill="#22d3ee"/>
+  <path d="M380 207 V255 L422 277" stroke="#a5f3fc" stroke-width="8" stroke-linecap="round"/>
+  <text x="640" y="215" font-family="'Sora','Arial',sans-serif" font-size="54" font-weight="800" fill="#f8fafc">AegisNet-BotRadar</text>
+  <text x="642" y="268" font-family="'Plus Jakarta Sans','Arial',sans-serif" font-size="26" fill="#38bdf8">Detección de Campañas de Desinformación Coordinada (CIB)</text>
+  <text x="642" y="322" font-family="'Plus Jakarta Sans','Arial',sans-serif" font-size="19" fill="#94a3b8">Plataforma analítica open-source y apartidista para la detección</text>
+  <text x="642" y="348" font-family="'Plus Jakarta Sans','Arial',sans-serif" font-size="19" fill="#94a3b8">temprana de granjas de bots e injerencias en procesos electorales.</text>
+  <rect x="642" y="392" width="300" height="52" rx="26" fill="url(#shield)"/>
+  <text x="700" y="426" font-family="'Plus Jakarta Sans','Arial',sans-serif" font-size="22" font-weight="700" fill="#0f172a">Explorar el panel →</text>
+  <text x="130" y="560" font-family="'JetBrains Mono','monospace'" font-size="17" fill="#475569">SHA-256 · cadena de custodia · matriz de confianza · datos verificados</text>
+</svg>
