@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-08-30T19:00:00Z",
+  "generado_utc": "2026-08-30T20:45:00Z",
   "descripcion": "Caso REAL: asalto masivo a la valla de Ceuta (jul 2026). Dataset reconstruido a partir de la documentacion verificada del proyecto (CASOS/ceuta-sucesos-previa.md), con fuentes publicas citadas (Maldita.es '51 bulos...', Newtral, EFE, BBC, Al Arabiya). Cada hallazgo registra fecha, nivel de verificacion (HECHO/HIPOTESIS/PREGUNTA) y fuente real. NO incluye datos inventados.",
   "metodologia": "Los items provienen de verificadores periodisticos publicos que documentaron la campana de desinformacion previa y durante el asalto. La nota metodologica aclara: los canales de campana no estan monitorizados y no hay datos capturados de julio por el pipeline (registra desde 28-ago); la continuidad de amplificadores es PREGUNTA ABIERTA.",
   "entidad": "ceuta",
@@ -215,6 +215,51 @@
       "nivel_verificacion": "PREGUNTA",
       "fecha_evento": "2026-07-25",
       "ts": "2026-07-25T00:00:00+00:00"
+    },
+    {
+      "tipo": "documentado",
+      "canal": "newtral",
+      "titulo": "HECHO: Mercadona desmiente haber alertado a la Policia de una 'compra masiva' de precursores de explosivos en Ceuta (aguafuerte/acido clorhidrico y papel de aluminio). La cadena afirma: 'no ha realizado ninguna denuncia ni detectado ninguna compra atipica de productos'.",
+      "url": "https://www.newtral.es/mercadona-niega-alerta-compra-precursores-explosivos-ceuta/20260829/",
+      "fuente": "Newtral (29 ago 2026) — desmentido de Mercadona sobre la alarma de precursores",
+      "entidad": "ceuta",
+      "nombre_entidad": "Ceuta: asalto a la valla de Julio 2026 (caso documentado)",
+      "entidad_region": "Espana",
+      "senal_severa": false,
+      "envio_masivo": true,
+      "nivel_verificacion": "HECHO",
+      "fecha_evento": "2026-08-29",
+      "ts": "2026-08-29T00:00:00+00:00"
+    },
+    {
+      "tipo": "pregunta",
+      "canal": "newtral",
+      "titulo": "PREGUNTA ABIERTA: el rumor de la 'compra masiva de precursores de explosivos por migrantes con la ONG No Name Kitchen financiada por George Soros' tiene como unica fuente el articulo de La Gaceta (28 ago, vinculada a Vox via Fundacion Disenso). Mercadona lo desmiente y la Policia no lo confirma. Se difunde en varios idiomas (es, fr, al).",
+      "url": "https://www.newtral.es/mercadona-niega-alerta-compra-precursores-explosivos-ceuta/20260829/",
+      "fuente": "Newtral (29 ago 2026) — analisis del origen del bulo (La Gaceta) y falta de confirmacion",
+      "entidad": "ceuta",
+      "nombre_entidad": "Ceuta: asalto a la valla de Julio 2026 (caso documentado)",
+      "entidad_region": "Espana",
+      "senal_severa": false,
+      "envio_masivo": true,
+      "nivel_verificacion": "PREGUNTA",
+      "fecha_evento": "2026-08-28",
+      "ts": "2026-08-28T00:00:00+00:00"
+    },
+    {
+      "tipo": "pregunta",
+      "canal": "newtral",
+      "titulo": "PREGUNTA ABIERTA: acusacion viral (con videos nocturnos) de que la ONG No Name Kitchen reparte spray de pimienta a migrantes 'contra ciudadanos, policia y militares'. Newtral: no hay pruebas que respalden la afirmacion, en los videos no se observa el reparto, la ONG lo desmiente y su coordinador reporta amenazas de muerte. Solo hay constancia de un ataque con piedras a un vehiculo militar.",
+      "url": "https://www.newtral.es/spray-pimienta-ceuta/20260828/",
+      "fuente": "Newtral (28 ago 2026) — verificacion del bulo del spray de pimienta",
+      "entidad": "ceuta",
+      "nombre_entidad": "Ceuta: asalto a la valla de Julio 2026 (caso documentado)",
+      "entidad_region": "Espana",
+      "senal_severa": false,
+      "envio_masivo": true,
+      "nivel_verificacion": "PREGUNTA",
+      "fecha_evento": "2026-08-28",
+      "ts": "2026-08-28T00:00:00+00:00"
     }
   ]
 }
