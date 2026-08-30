@@ -36,10 +36,14 @@ export interface CampaignSummary {
 
 export interface HealthResponse {
   ok: boolean;
+  version: string;
   datosDir: string;
   existeEstado: boolean;
   fechaSenales: string | null;
+  senalesMtime: string | null;
+  estadoMtime: string | null;
   nEntidades: number;
+  nCampanas: number;
 }
 
 export async function apiHealth(): Promise<HealthResponse | null> {

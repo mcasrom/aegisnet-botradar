@@ -19,6 +19,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join } from 'path';
 import { createHash } from 'crypto';
 import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 const PORT = process.env.PORT || 3789;
 const DATOS_DIR = process.env.DATOS_DIR || join(process.cwd(), 'DATOS');
@@ -202,12 +203,19 @@ function buildCaseCampaign(file) {
 app.get('/api/health', (_req, res) => {
   const estado = readJson(join(DATOS_DIR, 'estado.json'));
   const senal = latestSenaFile();
+  const senalStat = senal ? statSync(join(DATOS_DIR, senal), { throwIfNoEntry: false }) : null;
+  const pkg = readJson(join(fileURLToPath(new URL('.', import.meta.url)), 'package.json'));
+  const estadoStat = statSync(join(DATOS_DIR, 'estado.json'), { throwIfNoEntry: false });
   res.json({
     ok: true,
+    version: pkg?.version || '0.0.0',
     datosDir: DATOS_DIR,
     existeEstado: existsSync(join(DATOS_DIR, 'estado.json')),
     fechaSenales: senal ? senal.replace('oasis_senales_', '').replace('.json', '') : null,
-    nEntidades: estado && estado.entidades ? Object.keys(estado.entidades).length : 0
+    senalesMtime: senalStat?.mtime?.toISOString() || null,
+    estadoMtime: estadoStat?.mtime?.toISOString() || null,
+    nEntidades: estado && estado.entidades ? Object.keys(estado.entidades).length : 0,
+    nCampanas: estado && estado.entidades ? Object.keys(estado.entidades).length : 0
   });
 });
 

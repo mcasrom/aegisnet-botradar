@@ -24,7 +24,7 @@ import { Footer } from './components/Footer';
 import { DEMO_CAMPAIGNS } from './data/campaigns';
 import { InvestigationCampaign, SocialAccountNode, NetworkEdge } from './types/botradar';
 import { computeComprehensiveCIBScore } from './services/cibEngine';
-import { fetchCampaigns, fetchCampaignDetail, apiHealth } from './services/api';
+import { fetchCampaigns, fetchCampaignDetail, apiHealth, HealthResponse } from './services/api';
 
 /**
  * Banner persistente de MODO DEMO.
@@ -46,6 +46,8 @@ export default function App() {
   const [activeCampaign, setActiveCampaign] = useState<InvestigationCampaign>(DEMO_CAMPAIGNS[0] as InvestigationCampaign);
   const [isDemo, setIsDemo] = useState<boolean>(true);
   const [dataSource, setDataSource] = useState<string>('backend no conectado');
+  const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
+  const [appVersion, setAppVersion] = useState<string>('1.1.0');
   const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'geo' | 'action'>('action');
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
@@ -54,6 +56,7 @@ export default function App() {
     (async () => {
       try {
         const health = await apiHealth();
+        if (health) setHealthInfo(health);
         if (health && health.ok && health.existeEstado) {
           const summaries = await fetchCampaigns();
           if (!cancelled && summaries.length > 0) {
@@ -121,6 +124,9 @@ export default function App() {
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0A0C10] text-[#E2E8F0] font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
       <DemoBanner visible={isDemo} />
+      <div className="px-4 pt-2 sm:px-6">
+        <SystemHealthPanel health={healthInfo} isDemo={isDemo} version={appVersion} />
+      </div>
       {/* Top Navbar with Campaign Selector, CIB Status & Global Actions */}
       <Navbar
         campaigns={campaigns}
@@ -166,12 +172,15 @@ export default function App() {
             campaign={activeCampaign}
             onOpenReportModal={() => setIsReportModalOpen(true)}
             onOpenHowTo={() => setIsHowToOpen(true)}
+            health={healthInfo}
+            isDemo={isDemo}
+            version={appVersion}
           />
         )}
       </main>
 
       {/* Institutional Footer with Mandatory Copyright Credit */}
-      <Footer onOpenHowTo={() => setIsHowToOpen(true)} />
+      <Footer onOpenHowTo={() => setIsHowToOpen(true)} version={appVersion} />
 
       {/* Modals & Dialogs */}
       {selectedNode && (

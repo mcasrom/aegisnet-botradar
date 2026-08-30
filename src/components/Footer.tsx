@@ -8,9 +8,10 @@ import { ShieldCheck, Mail, GitBranch, Scale, Lock, BookOpen } from 'lucide-reac
 
 interface FooterProps {
   onOpenHowTo?: () => void;
+  version?: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenHowTo }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenHowTo, version = '1.1.0' }) => {
   return (
     <footer className="border-t border-[#1E293B] bg-[#0A0C10] px-6 py-2.5 text-[11px] text-slate-500">
       <div className="mx-auto flex flex-wrap items-center justify-between gap-4">
@@ -47,10 +48,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenHowTo }) => {
 
         {/* Telemetry Status Pills & Mandatory Contact */}
         <div className="flex flex-wrap items-center gap-4 text-slate-400">
-          <div className="flex items-center space-x-4">
-            <span>API Status: <span className="text-emerald-500 font-bold">Operational</span></span>
-            <span>Vector DB: <span className="text-indigo-400 font-bold">Synced</span></span>
-          </div>
+          <span className="font-mono text-slate-500">v{version}</span>
           <span className="hidden text-slate-800 sm:inline">|</span>
           <div>
             <span>Contacto:</span>{' '}
