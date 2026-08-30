@@ -16,9 +16,20 @@ import {
   Download,
   AlertTriangle,
   Plus,
-  BookOpen
+  BookOpen,
+  FlaskConical
 } from 'lucide-react';
 import { InvestigationCampaign } from '../types/botradar';
+
+/**
+ * Clasifica el origen del dataset de una campaña según su investigationCode.
+ * - "-DOC-"   -> caso documentado (reconstrucción verificada, no captura bruta)
+ * - "-OASIS-" -> señales reales del pipeline oasis.py
+ * - resto     -> demo/legado
+ */
+function isDocumentedCase(c: InvestigationCampaign): boolean {
+  return /-DOC-/.test(c.investigationCode || '');
+}
 
 interface NavbarProps {
   campaigns: InvestigationCampaign[];
@@ -82,6 +93,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="hidden font-mono text-slate-400 sm:inline">
             EXP: <span className="text-indigo-400 font-semibold">{activeCampaign.investigationCode}</span>
           </span>
+          {isDocumentedCase(activeCampaign) && (
+            <span
+              className="hidden items-center gap-1 rounded-sm border border-cyan-500/40 bg-cyan-950/40 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-widest text-cyan-300 md:inline-flex"
+              title="Caso reconstruido a partir de documentación pública verificada (fuentes periodísticas), no captura bruta del pipeline."
+            >
+              <FlaskConical className="h-3 w-3" />
+              CASO DOCUMENTADO
+            </span>
+          )}
           <span className="hidden text-slate-700 md:inline">|</span>
           <span className="hidden text-slate-400 md:inline">
             {activeCampaign.electoralProcess}
