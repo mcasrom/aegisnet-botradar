@@ -79,8 +79,8 @@ export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
       `1. FUNDAMENTO TÉCNICO DE LA DENUNCIA:`,
       `- Infracción de las Normas de la Comunidad sobre Manipulación de Plataforma y Spam Coordinado.`,
       `- Nivel CIB Global Calculado: ${cib.overallScore}/100 (${cib.riskLevel}).`,
-      `- Cron-jitter medio de amplificación: 0.18s (medido con reloj NTP Stratum 1). Latencia $< 0.35s descarta manipulación humana.`,
-      `- Coincidencia audiovisual: pHash DCT 99.4% con material reciclado descontextualizado.\n`,
+      `- Cron-jitter medio de amplificación y picos revisados: métricas medidas con reloj NTP Stratum 1.\n`,
+      `- Coincidencia/similitud semántica o audiovisual: cotejo perceptual (si procede) con material reciclado descontextualizado.\n`,
       `2. INVENTARIO DE CUENTAS AFECTADAS PARA SUSPENSIÓN / REVISIÓN TÉCNICA:`,
       `[Total nodos identificados: ${botNodes.length} cuentas con P(bot) >= 0.85]\n`
     ];
@@ -124,10 +124,10 @@ Fecha de Emisión: ${new Date().toISOString()}
 
 ## 1. RESUMEN DE LA DETECCIÓN
 - Nivel CIB: ${cib.overallScore}/100 (${cib.riskLevel})
-- Sincronía Temporal: Ráfaga de ${burstCount} publicaciones en < 17 segundos (Reloj NTP Stratum 1).
-- Descarte Fisiológico: La latencia de inyección (< 0.35s) excluye la digitación humana manual.
-- Cotejo Audiovisual: pHash DCT al 99.4% con material de archivo histórico de RTVE (2018).
-- Nodos Egress: Alojamiento en AS48282 (Selectel VPS) y pasarela 4G AS36903 (Maroc Telecom).
+- Sincronía Temporal: Ráfaga de ${burstCount} publicaciones concentradas en un intervalo corto (Reloj NTP Stratum 1).
+- Patrón de Automatización: Métricas de inter-arrival compatibles con scripts/cron en los picos revisados.
+- Cotejo de Contenido: Similitud semántica y/o perceptual (pHash) con material reciclado o descontextualizado, cuando proceda.
+- Nodos Egress: Infraestructura de red de alquiler comercial (VPS/proxies/pasarelas móviles); no implica atribución a un país u operador concreto.
 
 ---
 
@@ -142,7 +142,7 @@ Fecha de Emisión: ${new Date().toISOString()}
 - Identificación de los 2 nodos semilla coordinadores y los 26 amplificadores automatizados.
 - Trazabilidad de IDs numéricos inmutables para neutralizar cambios de @handle.
 - Mapeo de prefijos BGP y ASNs de salida.
-- Límite pericial: No imputar autoría estatal a IPs comerciales accesibles a terceros.
+- Límite técnico: No imputar autoría estatal a partir de IPs comerciales accesibles a terceros.
 
 ### FASE 3: TAKEDOWN Y NOTIFICACIÓN A PLATAFORMAS (TRUST & SAFETY)
 - Emisión del paquete de denuncia con identificadores inmutables a los canales de integridad de X, Telegram y Meta.
@@ -154,7 +154,7 @@ Fecha de Emisión: ${new Date().toISOString()}
 - Presentación de la prueba audiovisual pHash desmontando el reciclaje temporal.
 
 ### FASE 5: FORMALIZACIÓN DEL DOSSIER PERICIAL (VÍA LEGAL)
-- Emisión del informe pericial de 5 páginas con cadena de custodia en 5 fases.
+- Emisión del informe técnico OSINT de 5 páginas con cadena de custodia en 5 fases.
 - Puesta a disposición de autoridades judiciales bajo el estándar ISO/IEC 27037.
 
 ---
@@ -221,7 +221,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
             className="flex items-center gap-1.5 rounded-sm border border-cyan-500/50 bg-cyan-600 px-3.5 py-2 text-xs font-bold text-white shadow-md hover:bg-cyan-500 transition-all"
           >
             <FileText className="h-4 w-4" />
-            <span>Dossier Pericial (5 Págs PDF)</span>
+            <span>Informe Técnico OSINT (5 Págs PDF)</span>
           </button>
         </div>
       </div>
@@ -229,7 +229,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
       {/* Case Briefing Strip */}
       <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4 rounded-sm border border-[#1E293B] bg-[#0F172A] p-3.5 text-xs">
         <div>
-          <span className="block text-[10px] font-mono uppercase text-slate-400">Expediente Pericial</span>
+          <span className="block text-[10px] font-mono uppercase text-slate-400">Expediente Técnico</span>
           <span className="font-mono font-bold text-cyan-400">{campaign.investigationCode}</span>
         </div>
         <div>
@@ -238,11 +238,11 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
         </div>
         <div>
           <span className="block text-[10px] font-mono uppercase text-slate-400">Sincronía Temporal</span>
-          <span className="font-mono font-bold text-slate-200">{burstCount} eventos en 16.20s</span>
+          <span className="font-mono font-bold text-slate-200">{burstCount} eventos</span>
         </div>
         <div>
-          <span className="block text-[10px] font-mono uppercase text-slate-400">Evidencia Audiovisual</span>
-          <span className="font-mono font-bold text-amber-400">pHash 99.4% (Reciclaje 2018)</span>
+          <span className="block text-[10px] font-mono uppercase text-slate-400">Cotejo de Contenido</span>
+          <span className="font-mono font-bold text-amber-400">Según evidencia</span>
         </div>
       </div>
 
@@ -395,7 +395,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
                   <Fingerprint className="h-4 w-4" />
                   <span>Fase 2: Triangulación Topológica, IDs Inmutables y Atribución Técnica</span>
                 </div>
-                <span className="font-mono text-[11px] text-amber-400 font-semibold">36 NODOS CARACTERIZADOS</span>
+                <span className="font-mono text-[11px] text-amber-400 font-semibold">{campaign.nodes.length} NODOS CARACTERIZADOS</span>
               </div>
 
               <p className="text-xs text-slate-300 leading-relaxed">
@@ -430,7 +430,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
                     <div className="text-xs space-y-1">
                       <span className="font-bold text-rose-300">Regla de Oro en la Atribución de Tráfico:</span>
                       <p className="text-slate-300 text-[11px] leading-relaxed">
-                        Los 22 servidores identificados en <strong>AS48282 (Selectel, San Petersburgo)</strong> y los 6 proxies residenciales en <strong>AS36903 (Maroc Telecom)</strong> demuestran el origen de la capa de red utilizada para saltarse geocercas. <strong className="text-rose-200">Bajo ninguna circunstancia el grupo OSINT debe atribuir esto formalmente al gobierno ruso o marroquí</strong>, ya que cualquier actor privado con una tarjeta de crédito puede contratar estas infraestructuras comerciales.
+                        La infraestructura de red observada (alojamiento VPS, proxies o pasarelas móviles) es de <strong>alquiler comercial</strong>, accesible a actores privados con una tarjeta de crédito. <strong className="text-rose-200">Bajo ninguna circunstancia el grupo OSINT debe atribuir esto formalmente a un gobierno, servicio de inteligencia o país concreto</strong> a partir de telemetría abierta: tal atribución excede el alcance de estos datos y requiere evidencia judicial o de señales (SIGINT).
                       </p>
                     </div>
                   </div>
@@ -497,10 +497,10 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
 
                 <div className="rounded-sm border border-[#1E293B] bg-[#0A0C10] p-3 space-y-1.5">
                   <span className="font-bold text-slate-200 text-xs block">
-                    2. Prueba Irrefutable pHash (Descontextualización Demostrada):
+                     2. Evidencia pHash (Descontextualización Demostrable):
                   </span>
                   <p className="text-slate-400 text-[11px] leading-relaxed">
-                    Exponer el cotejo perceptual: el metraje difundido no es de julio de 2026, sino una grabación del asalto a la valla del <strong>26 de julio de 2018</strong> emitida por RTVE, a la cual se le eliminaron deliberadamente las marcas de agua y metadatos EXIF.
+                    Exponer el cotejo perceptual cuando proceda: si se detecta coincidencia de pHash con material de archivo, demuestre que el contenido fue reutilizado fuera de su contexto original, señalando la fecha/autores originales del metraje. Presente siempre los metadatos EXIF y su cadena de custodia.
                   </p>
                 </div>
               </div>
@@ -512,7 +512,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
               <div className="flex items-center justify-between border-b border-[#1E293B] pb-3">
                 <div className="flex items-center gap-2 text-sm font-bold text-cyan-300">
                   <Scale className="h-4 w-4" />
-                  <span>Fase 5: Dossier Pericial y Remisión a Autoridades Judiciales</span>
+                  <span>Fase 5: Expediente Técnico y Remisión a Autoridades</span>
                 </div>
                 <span className="font-mono text-[11px] text-cyan-400 font-semibold">VALIDEZ PROCESAL</span>
               </div>
@@ -528,7 +528,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
                     <li>Declaración jurada de la metodología algorítmica (Jaccard, Levenshtein, pHash).</li>
                     <li>Sello criptográfico del dataset intacto (`{campaign.datasetSha256.slice(0, 16)}...`).</li>
                     <li>Trazabilidad de la cadena de custodia en 5 etapas selladas temporalmente.</li>
-                    <li>Separación estricta entre hechos periciales y opiniones no comprobables.</li>
+                    <li>Separación estricta entre hechos técnicos verificados y opiniones no comprobables.</li>
                   </ul>
                 </div>
               </div>
@@ -543,7 +543,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
             <div className="flex items-center justify-between border-b border-[#1E293B] pb-2">
               <div className="flex items-center gap-1.5 text-xs font-bold text-white">
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                <span>Checklist de Verificación Pericial</span>
+                <span>Checklist de Verificación Técnica</span>
               </div>
               <span className="font-mono text-[10px] text-slate-400">
                 {Object.values(checkedItems).filter(Boolean).length}/8 Completados
@@ -559,7 +559,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
                 { id: 'immutable_ids_logged', label: 'IDs inmutables de nodos registrados' },
                 { id: 'open_data_prepared', label: 'CSV y GEXF listos para descarga' },
                 { id: 'takedown_compiled', label: 'Solicitud Trust & Safety remitida' },
-                { id: 'legal_dossier_signed', label: 'Dossier pericial 5 págs generado' }
+                { id: 'legal_dossier_signed', label: 'Informe técnico OSINT 5 págs generado' }
               ].map((item) => (
                 <label
                   key={item.id}

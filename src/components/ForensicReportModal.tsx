@@ -49,13 +49,13 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
 
   const handleDownloadPDF = () => {
     generateForensicPDF(campaign);
-    setDownloadSuccess('Dossier pericial formal de 5 páginas descargado en formato PDF con sellado SHA-256.');
+    setDownloadSuccess('Informe técnico OSINT de 5 páginas descargado en PDF con sellado SHA-256.');
     setTimeout(() => setDownloadSuccess(null), 4000);
   };
 
   const handleDownloadNodesCSV = () => {
     exportNodesCSV(campaign);
-    setDownloadSuccess('Inventario completo de los 36 nodos exportado en CSV (IDs inmutables, ASN y BGP).');
+    setDownloadSuccess('Inventario completo de nodos exportado en CSV (IDs inmutables, ASN y BGP).');
     setTimeout(() => setDownloadSuccess(null), 4000);
   };
 
@@ -96,14 +96,14 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-white tracking-tight">
-                  Dossier Técnico Forense y Exportación de Datos Primarios
+                Dossier Técnico Forense y Exportación de Datos Primarios
                 </h3>
                 <span className="rounded-sm border border-cyan-500/30 bg-cyan-950/30 px-2 py-0.5 font-mono text-[10px] text-cyan-300">
                   REPRODUCIBLE OSINT
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Evidencia empírica abierta: NTP Stratum 1 (±0.045s), inventario íntegro de 36 nodos, pHash y matriz de confianza
+                Evidencia empírica abierta: NTP Stratum 1 (±0.045s), inventario íntegro de {campaign.nodes?.length ?? 0} nodos, cotejo semántico y matriz de confianza
               </p>
             </div>
           </div>
@@ -137,7 +137,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                 <span className="text-xs font-mono">Dossier PDF (5 Págs)</span>
               </div>
               <p className="mt-1 text-[10px] text-slate-400 group-hover:text-slate-300">
-                Dossier técnico formal con desglose completo de 36 nodos y matriz de certeza.
+                Dossier técnico formal con desglose de {campaign.nodes?.length ?? 0} nodos y matriz de certeza.
               </p>
               <span className="mt-2 text-[10px] font-mono text-cyan-300 underline">Descargar PDF ⬇</span>
             </button>
@@ -148,7 +148,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
             >
               <div className="flex items-center gap-1.5 text-indigo-400 font-bold">
                 <Table className="h-4 w-4" />
-                <span className="text-xs font-mono">CSV 36 Nodos</span>
+                <span className="text-xs font-mono">CSV {campaign.nodes.length} Nodos</span>
               </div>
               <p className="mt-1 text-[10px] text-slate-400 group-hover:text-slate-300">
                 Inventario primario: IDs inmutables, BGP ASN, JA3 y P(bot).
@@ -165,7 +165,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                 <span className="text-xs font-mono">CSV Micro-Ráfaga</span>
               </div>
               <p className="mt-1 text-[10px] text-slate-400 group-hover:text-slate-300">
-                28 eventos en 16.20s con precisión en milisegundos (NTP Stratum 1).
+                {campaign.totalCollectedEvents ?? 0} eventos con precisión en milisegundos (NTP Stratum 1).
               </p>
               <span className="mt-2 text-[10px] font-mono text-emerald-400 underline">Descargar CSV ⬇</span>
             </button>
@@ -205,14 +205,13 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
               <AlertCircle className="h-4 w-4 text-rose-400 shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <p className="font-bold text-rose-300 text-xs">
-                  Aviso Metodológico y Límites Periciales (No Atribución Estatal en Telemetría Abierta):
+                  Aviso Metodológico y Límites del Análisis Técnico (No Atribución Estatal en Telemetría Abierta):
                 </p>
                 <p className="text-slate-300 leading-relaxed text-[11px]">
-                  El presente informe pericial preliminar expone parámetros técnicos cuantitativos (sincronía temporal de milisegundos, 
-                  reciclaje de archivos audiovisuales cotejado por pHash, y huellas TLS JA3). Estos datos demuestran 
-                  <strong> automatización e inautenticidad técnica coordinada</strong>, pero <strong className="text-rose-200">NO acreditan autoría jurídica</strong> de personas 
-                  físicas ni permiten imputar la acción a servicios de inteligencia de Estados extranjeros, ya que el alquiler de servidores VPS comerciales (Selectel AS48282) 
-                  y pasarelas móviles 4G (Maroc Telecom AS36903) está al alcance de actores privados independientes.
+                  El presente informe técnico preliminar expone parámetros cuantitativos de los datos analizados (sincronía temporal, similitud semántica y otros patrones de red). Estos datos permiten señalar posibles patrones de 
+                  <strong> automatización o coordinación inauténtica técnica</strong>, pero <strong className="text-rose-200">NO acreditan autoría jurídica</strong> de personas 
+                  físicas ni permiten imputar la acción a servicios de inteligencia de Estados extranjeros: el alquiler de infraestructura de red (VPS, proxies, pasarelas móviles) 
+                  está al alcance de actores privados independientes, y la atribución excede el alcance de la telemetría pública.
                 </p>
               </div>
             </div>
@@ -248,18 +247,18 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
               <div className="rounded-sm border border-[#1E293B] bg-[#111827] p-3 space-y-1.5">
                 <span className="text-xs font-bold text-slate-200">1. Evidencia Empírica Observada</span>
                 <ul className="list-disc pl-4 space-y-1 text-slate-400 text-[11px]">
-                  <li>28 publicaciones textuales idénticas emitidas en 16.20 segundos.</li>
-                  <li>Cron-jitter submétrico medio de 0.18s medido con reloj NTP Stratum 1 (±0.045s).</li>
-                  <li>Coincidencia audiovisual del 99.4% (pHash DCT) con archivo de RTVE de julio de 2018.</li>
-                  <li>Nodos de salida en AS48282 (Selectel VPS Rusia) y AS36903 (Maroc Telecom 4G).</li>
+                  <li>{campaign.totalCollectedEvents ?? 0} eventos (señales/hallazgos) asociados a la entidad {campaign.title}.</li>
+                  <li>{campaign.nodes?.length ?? 0} nodos y {campaign.edges?.length ?? 0} interacciones en el subgrafo de estudio.</li>
+                  <li>Índice CIB global {campaign.cibBreakdown?.overallScore ?? 0}/100 (riesgo: {campaign.cibBreakdown?.riskLevel ?? 'N/D'}).</li>
+                  <li>La evidencia se limita a la ventana de observación capturada; ver matriz de confianza para el alcance.</li>
                 </ul>
               </div>
 
               <div className="rounded-sm border border-[#1E293B] bg-[#111827] p-3 space-y-1.5">
                 <span className="text-xs font-bold text-slate-200">2. Inferencia &amp; Límites de Conclusión</span>
                 <ul className="list-disc pl-4 space-y-1 text-slate-400 text-[11px]">
-                  <li>La latencia inferior a 0.35s descarta fisiológicamente interacción manual humana.</li>
-                  <li>El clasificador AegisNet-CIB-v1.2 otorga probabilidad P(bot) = 0.94.</li>
+                  <li>La correlación temporal y la duplicación semántica se cuantifican según los scores del motor (índice CIB global {campaign.cibBreakdown?.overallScore ?? 0}/100).</li>
+                  <li>El peso de automatización se estima a partir de los éxitos de duplicación exacta (exactCopyPasteRatio) y sincronía, no de una probabilidad única fija.</li>
                   <li><strong className="text-rose-400">Límite:</strong> No se puede atribuir autoría estatal ni imputación penal sin investigación judicial o SIGINT.</li>
                 </ul>
               </div>
@@ -327,7 +326,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   <span>Fórmula Matemática CIB &amp; Benchmark del Clasificador</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">
-                  P(inauténtico) = 0.94
+                  P(inauténtico) ≈ {((campaign.cibBreakdown?.overallScore ?? 0) / 100).toFixed(2)}
                 </span>
               </div>
 
@@ -430,11 +429,11 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   </div>
                   {exif.historicalArchiveMatch && (
                     <div className="text-[10px] font-mono text-slate-500">
-                      Cotejo Archivo RTVE: {exif.historicalArchiveMatch}
+                      Cotejo de Archivo: {exif.historicalArchiveMatch}
                     </div>
                   )}
                   <div className="mt-1 border-t border-[#1E293B] pt-1.5 text-rose-300">
-                    <strong>Dictamen Pericial:</strong> {exif.verdict}
+                    <strong>Análisis Técnico:</strong> {exif.verdict}
                   </div>
                 </div>
               ))}
@@ -475,7 +474,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
         {/* Footer with copyright and download actions */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#1E293B] bg-[#0F172A] px-6 py-3.5">
           <div className="text-[11px] text-slate-400">
-            Copyright © M. Castillo — Contacto pericial:{' '}
+            Copyright © M. Castillo — Contacto del proyecto:{' '}
             <span className="font-mono text-slate-300">mybloggingnotes@gmail.com</span>
           </div>
 
@@ -509,7 +508,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
               className="flex items-center gap-1.5 rounded-sm border border-[#1E293B] bg-[#111827] px-2.5 py-1.5 text-xs font-semibold text-indigo-300 hover:bg-[#1E293B] transition-colors"
             >
               <Table className="h-3.5 w-3.5 text-indigo-400" />
-              <span>CSV 36 Nodos</span>
+              <span>CSV {campaign.nodes.length} Nodos</span>
             </button>
 
             <button
@@ -517,7 +516,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
               className="flex items-center gap-1.5 rounded-sm border border-cyan-500/40 bg-cyan-600 px-3.5 py-1.5 text-xs font-bold text-white shadow-md hover:bg-cyan-500 transition-colors"
             >
               <Download className="h-3.5 w-3.5" />
-              <span>Descargar Dossier PDF (5 Págs)</span>
+              <span>Descargar Informe Técnico (PDF, 5 Págs)</span>
             </button>
           </div>
         </div>

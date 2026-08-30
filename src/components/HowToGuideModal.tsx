@@ -78,30 +78,30 @@ export const HowToGuideModal: React.FC<HowToGuideModalProps> = ({
 
   const handleDownloadMarkdown = () => {
     const rawMarkdown = `# MANUAL DE OPERACIÓN Y GESTIÓN OPERATIVA
-## AegisNet-BotRadar: Plataforma Pericial OSINT para Detección y Mitigación de CIB
+## AegisNet-BotRadar: Plataforma Técnica OSINT para Detección y Mitigación de CIB
 Versión 2.0 | Guía de Procedimientos para Equipos e Investigadores de Fuentes Abiertas
 Copyright © M. Castillo — Contacto: mybloggingnotes@gmail.com
 
 ---
 
 ### 1. INTRODUCCIÓN Y ALCANCE OPERATIVO
-AegisNet-BotRadar es una estación de trabajo pericial de fuentes abiertas diseñada para:
+AegisNet-BotRadar es una estación de trabajo técnica de fuentes abiertas diseñada para:
 - Detectar, aislar y caracterizar cuantitativamente campañas de Comportamiento Inauténtico Coordinado (CIB).
 - Proporcionar telemetría forense con resolución de milisegundos referenciada a reloj atómico NTP Stratum 1.
-- Generar evidencias periciales admisibles en sede judicial y ante plataformas (ISO/IEC 27037).
-- Articular una Línea de Acción Operativa inmediata (takedowns, desmentidos y peritaje).
+- Generar evidencias técnicas rastreables, con cadena de custodia (ISO/IEC 27037).
+- Articular una Línea de Acción Operativa inmediata (takedowns, desmentidos y análisis técnico).
 
-### 2. LÍMITES PERICIALES DE ATRIBUCIÓN (REGLA DE ORO)
-- Hecho probado: Conexiones a través de AS48282 (Selectel VPS) o AS36903 (Maroc Telecom 4G).
-- Inferencia técnica: Empleo de infraestructura extranjera comercial para evadir geocercas y filtros.
+### 2. LÍMITES DE ATRIBUCIÓN (REGLA DE ORO)
+- Hecho probable: Conexiones a través de infraestructura de red de alquiler comercial (VPS, proxies, pasarelas móviles).
+- Inferencia técnica: Empleo de infraestructura ajena para evadir geocercas y filtros.
 - Límite infranqueable: NO imputar autoría a gobiernos estatales sin mandamientos judiciales o SIGINT. Cualquier actor privado puede alquilar VPS y proxies comerciales.
 
 ### 3. FLUJO OPERATIVO (5 FASES)
 1. Preservación WORM: Sellado SHA-256 y marcas de tiempo NTP Stratum 1 (±0.045s).
 2. Triangulación Topológica: Registro de IDs numéricos inmutables y mapeo BGP.
 3. Notificación a Plataformas: Solicitud formal a equipos de Trust & Safety para congelación de cuentas.
-4. Desmentido Open Data: Publicación de CSV con milisegundos, grafos GEXF y cotejo audiovisual pHash DCT al 99.4%.
-5. Formalización Judicial: Emisión del informe pericial de 5 páginas bajo la norma ISO/IEC 27037.
+4. Desmentido Open Data: Publicación de CSV con milisegundos, grafos GEXF y cotejo semántico/perceptual cuando proceda.
+5. Formalización del Expediente: Emisión del informe técnico OSINT de 5 páginas con cadena de custodia.
 
 ### 4. GESTIÓN Y CALIBRACIÓN DEL MODELO
 Fórmula del Score CIB:
@@ -134,13 +134,13 @@ Umbrales operativos:
       {
         id: 'sec_fundamentos',
         category: 'fundamentos',
-        title: '1. Fundamentos Periciales y Límites de Atribución',
+        title: '1. Fundamentos Técnicos y Límites de Atribución',
         subtitle: 'Principios rectores de la investigación OSINT, cadena de custodia y delimitación técnica',
         badge: 'PRINCIPIO PERICIAL',
         content: (
           <div className="space-y-3.5 text-xs text-slate-300">
             <p className="leading-relaxed">
-              El análisis pericial de redes sociales exige una separación tajante entre los <strong>hechos probados mediante telemetría</strong> y las inferencias políticas o geopolíticas.
+              El análisis técnico de redes sociales exige una separación tajante entre los <strong>hechos probados mediante telemetría</strong> y las inferencias políticas o geopolíticas.
             </p>
 
             <div className="rounded-sm border border-rose-500/30 bg-rose-950/20 p-3">
@@ -149,7 +149,7 @@ Umbrales operativos:
                 <div className="space-y-1">
                   <span className="font-bold text-rose-300">La Regla de Oro en la Atribución Técnica:</span>
                   <p className="text-slate-300 text-[11px] leading-relaxed">
-                    Identificar que 22 nodos operan a través del <strong>AS48282 (Selectel VPS, San Petersburgo)</strong> o pasarelas móviles en el <strong>AS36903 (Maroc Telecom)</strong> acredita el origen de la capa de red utilizada para saltarse geocercas. <strong>Bajo ninguna circunstancia el analista OSINT debe atribuir esto formalmente a un gobierno extranjero</strong> sin mandamientos judiciales o inteligencia de señales (SIGINT), ya que cualquier cibercriminal, agencia privada o actor local puede contratar estos servicios comerciales anónimamente.
+                    Identificar nodos que operan a través de <strong>infraestructura de red de alquiler comercial</strong> (VPS, proxies o pasarelas móviles) ayuda a describir la capa de red utilizada para saltarse geocercas. <strong>Bajo ninguna circunstancia el analista OSINT debe atribuir esto formalmente a un gobierno extranjero</strong> sin mandamientos judiciales o inteligencia de señales (SIGINT), ya que cualquier cibercriminal, agencia privada o actor local puede contratar estos servicios comerciales anónimamente.
                   </p>
                 </div>
               </div>
@@ -189,7 +189,7 @@ Umbrales operativos:
         content: (
           <div className="space-y-3.5 text-xs text-slate-300">
             <p className="leading-relaxed">
-              Toda investigación pericial en AegisNet-BotRadar debe seguir un orden secuencial estricto para no alertar a los operadores de la red ni invalidar las pruebas ante un tribunal:
+              Toda investigación técnica en AegisNet-BotRadar debe seguir un orden secuencial estricto para no alertar a los operadores de la red ni invalidar las pruebas ante un tribunal:
             </p>
 
             <div className="space-y-2">
@@ -215,13 +215,13 @@ Umbrales operativos:
                 {
                   num: '04',
                   name: 'Desmentido Factual en Fuentes Abiertas (Open OSINT)',
-                  desc: 'Publicación de datos brutos (CSV con resolución de milisegundos y GEXF para Gephi) y demostración del reciclaje audiovisual mediante cotejo pHash al 99.4%.',
+                  desc: 'Publicación de datos brutos (CSV con resolución de milisegundos y GEXF para Gephi) y demostración del reciclaje de contenido mediante cotejo semántico/perceptual cuando proceda.',
                   tag: 'OPEN DATA'
                 },
                 {
                   num: '05',
-                  name: 'Dossier Pericial & Remisión Judicial',
-                  desc: 'Emisión del dictamen pericial estructurado de 5 páginas con cadena de custodia sellada para procesos en juzgados de instrucción o comisiones electorales.',
+                  name: 'Expediente Técnico & Remisión',
+                  desc: 'Emisión del informe técnico OSINT de 5 páginas con cadena de custodia sellada para su revisión por análisis o audiencia técnica.',
                   tag: 'JUDICIAL'
                 }
               ].map((step) => (

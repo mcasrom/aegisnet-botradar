@@ -25,7 +25,7 @@ export async function calculateSha256(content: string): Promise<string> {
 }
 
 /**
- * Cabecera estándar institucional para cada página del informe pericial.
+ * Cabecera estándar institucional para cada página del informe técnico OSINT.
  */
 function drawPageHeader(doc: jsPDF, campaign: InvestigationCampaign, pageNum: number, totalPages: number) {
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -46,7 +46,7 @@ function drawPageHeader(doc: jsPDF, campaign: InvestigationCampaign, pageNum: nu
   doc.setFontSize(7);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(148, 163, 184);
-  doc.text('Laboratorio Pericial de Coordinación Inauténtica en Redes Digitales | Metodología de Auditoría Abierta', 14, 13.5);
+  doc.text('Informe Técnico OSINT de Coordinación Inauténtica en Redes Digitales | Metodología de Auditoría Abierta', 14, 13.5);
 
   doc.setTextColor(56, 189, 248);
   doc.setFont('helvetica', 'bold');
@@ -75,9 +75,9 @@ function drawPageFooter(doc: jsPDF, campaign: InvestigationCampaign, pageNum: nu
 
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(100, 116, 139);
-  doc.text('Copyright © M. Castillo — Contacto pericial: mybloggingnotes@gmail.com', 14, footerY + 3.5);
+  doc.text('Copyright © M. Castillo — AegisNet-BotRadar (proyecto OSINT de código abierto)', 14, footerY + 3.5);
 
-  const pageStr = `Página ${pageNum} de ${totalPages} — Dictamen Técnico Preliminar`;
+  const pageStr = `Página ${pageNum} de ${totalPages} — Informe Técnico OSINT Preliminar`;
   const pageStrWidth = doc.getTextWidth(pageStr);
   doc.text(pageStr, pageWidth - 14 - pageStrWidth, footerY + 1.5);
 }
@@ -102,7 +102,7 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
 
   let y = 28;
 
-  // Banner Metodológico y Advertencia Pericial
+  // Banner Metodológico y Advertencia Técnica
   doc.setFillColor(254, 242, 242);
   doc.rect(14, y, pageWidth - 28, 17, 'F');
   doc.setDrawColor(239, 68, 68);
@@ -111,13 +111,13 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setTextColor(153, 27, 27);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
-  doc.text('AVISO METODOLÓGICO Y ALCANCE PERICIAL DEL INFORME:', 18, y + 4.5);
+  doc.text('AVISO METODOLÓGICO Y ALCANCE DEL INFORME TÉCNICO OSINT:', 18, y + 4.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.8);
   doc.setTextColor(69, 10, 10);
   const legalNotice =
-    'El presente informe preliminar recoge evidencias cuantitativas de telemetría de red, sincronía temporal submétrica y duplicación semántica. Conforme a las buenas prácticas forenses internacionales, estos datos permiten inferir automatización y coordinación inauténtica (CIB), pero NO acreditan autoría jurídica de personas físicas ni justifican atribución directa a servicios de inteligencia o gobiernos soberanos sin pruebas periciales de interceptación judicial o contrainteligencia de señales (SIGINT).';
+    'El presente informe preliminar recoge evidencias cuantitativas de telemetría de red, sincronía temporal y duplicación semántica. Conforme a las buenas prácticas forenses internacionales, estos datos permiten inferir automatización y coordinación inauténtica (CIB), pero NO acreditan autoría jurídica de personas físicas ni justifican atribución directa a servicios de inteligencia o gobiernos soberanos sin pruebas forenses de interceptación judicial o contrainteligencia de señales (SIGINT).';
   const splitNotice = doc.splitTextToSize(legalNotice, pageWidth - 36);
   doc.text(splitNotice, 18, y + 8.5);
 
@@ -158,11 +158,22 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   y += 4.5;
   const colW = (pageWidth - 28) / 2;
 
-  // Columna Izquierda: Evidencia e Inferencia
+  // Columna Izquierda: Evidencia e Inferencia (datos reales de la campaña)
   doc.setFillColor(241, 245, 249);
   doc.rect(14, y, colW - 2, 44, 'F');
   doc.setDrawColor(203, 213, 225);
   doc.rect(14, y, colW - 2, 44, 'S');
+
+  const _cibSec1 = campaign.cibBreakdown || ({} as InvestigationCampaign['cibBreakdown']);
+  const nNodes = campaign.nodes?.length || 0;
+  const nEdges = campaign.edges?.length || 0;
+  const nEvents = campaign.totalCollectedEvents ?? 0;
+
+  const dupPosts = (campaign.nodes || []).reduce(
+    (acc, nd) => acc + (nd.contentMetrics?.samplePosts || []).filter((p) => p.isExactDuplicate).length,
+    0
+  );
+  const susNodes = (campaign.nodes || []).filter((nd) => (nd.cibScore || 0) >= 75).length;
 
   doc.setFontSize(7.2);
   doc.setFont('helvetica', 'bold');
@@ -172,24 +183,24 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setFontSize(6.6);
   doc.setTextColor(71, 85, 105);
   const evText =
-    '• 28 publicaciones textuales idénticas emitidas en 16.20 segundos.\n' +
-    '• Cron-jitter submétrico medio de 0.18s entre réplicas (reloj NTP Stratum 1).\n' +
-    '• Coincidencia de metraje audiovisual al 99.4% con archivo histórico RTVE de 2018.\n' +
-    '• Nodos de salida BGP en Selectel VPS (AS48282) y Maroc Telecom 4G (AS36903).';
+    `• ${nEvents} eventos (señales/hallazgos) asociados a la entidad ${campaign.title}.\n` +
+    `• ${nNodes} nodos y ${nEdges} interacciones en el subgrafo de estudio.\n` +
+    (dupPosts > 0 ? `• ${dupPosts} publicaciones marcadas como duplicación exacta (envío coordinado).\n` : '• No se registraron duplicaciones exactas en la ventana de observación.\n') +
+    `• Índice CIB global ${_cibSec1.overallScore ?? 0}/100 (${_cibSec1.semanticScore ?? 0} semántico, ${_cibSec1.temporalScore ?? 0} temporal, ${_cibSec1.topologicalScore ?? 0} topológico, ${_cibSec1.metadataScore ?? 0} metadatos).`;
   doc.text(doc.splitTextToSize(evText, colW - 8), 17, y + 9);
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.2);
   doc.setTextColor(30, 41, 59);
-  doc.text('B) Inferencia Técnica Razonada:', 17, y + 27);
+  doc.text('B) Inferencia Técnica Razonada:', 17, y + 27 + (dupPosts > 0 ? 0 : -2));
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.6);
   doc.setTextColor(71, 85, 105);
   const infText =
-    '• La latencia inferior a 0.35s descarta fisiológicamente interacción manual humana.\n' +
-    '• El clasificador de automatización otorga una probabilidad P(bot)=0.94.\n' +
-    '• Estructura topológica en estrella compatible con red Hub-and-Spoke de botnet.';
-  doc.text(doc.splitTextToSize(infText, colW - 8), 17, y + 31.5);
+    `• La concentración de grados y los picos revisados sugieren patrones de coordinación (CIB ${_cibSec1.overallScore ?? 0}/100).\n` +
+    (susNodes > 0 ? `• ${susNodes} cuentas con score CIB individual ≥ 75 (candidatas a amplificación automatizada).\n` : '• Ninguna cuenta superó un score CIB individual elevado en la ventana analizada.\n') +
+    '• La evidencia es de telemetría y patrones; no se atribuye identidad jurídica a los operadores.';
+  doc.text(doc.splitTextToSize(infText, colW - 8), 17, y + (dupPosts > 0 ? 31.5 : 31));
 
   // Columna Derecha: Conclusión Limitada y Límites
   doc.setFillColor(241, 245, 249);
@@ -205,9 +216,9 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setFontSize(6.6);
   doc.setTextColor(71, 85, 105);
   const conText =
-    '• Difusión artificial altamente coordinada compatible con campaña CIB.\n' +
-    '• Reciclaje deliberado de material audiovisual para inducir alarma social.\n' +
-    '• Operación de astroturfing estructurada para simular volumen ciudadano.';
+    `• ${_cibSec1.riskLevel === 'CONFIRMED_CIB' ? 'Presencia de patrones de coordinación inauténtica (CIB) según score técnico.' : _cibSec1.riskLevel === 'SUSPICIOUS' ? 'Comportamiento sospechoso: indicios de amplificación coordinada.' : 'Comportamiento mayormente orgánico según los patrones observados.'}\n` +
+    '• El análisis se limita a la ventana de observación capturada (sin extender conclusiones fuera de ella).\n' +
+    '• No se han obtenido capturas ni identidades de operadores; solo telemetría de red y contenido público.';
   doc.text(doc.splitTextToSize(conText, colW - 8), 17 + colW + 2, y + 9);
 
   doc.setFont('helvetica', 'bold');
@@ -219,8 +230,8 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setTextColor(127, 29, 29);
   const limText =
     '• NO prueba la identidad jurídica de los operadores ni su nacionalidad real.\n' +
-    '• El alquiler de VPS y proxies 4G es accesible a delincuencia común o particulares.\n' +
-    '• NO se puede atribuir legalmente a agencias estatales rusas o marroquíes.';
+    '• El alquiler de VPS, proxies o redes es accesible a particulares y empresas.\n' +
+    '• NO se atribuye autoría a ningún Estado, servicio de inteligencia o colectivo concreto.';
   doc.text(doc.splitTextToSize(limText, colW - 8), 17 + colW + 2, y + 31.5);
 
   y += 49;
@@ -246,50 +257,16 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
 
   y += 6;
 
-  const matrix = campaign.confidenceMatrix || [
-    {
-      dimension: '1. Coordinación Topológica',
-      confidenceLevel: 'HIGH',
-      technicalGrounding: 'Arquitectura Hub-and-Spoke, reciprocidad < 0.03, modularidad Louvain Q=0.64.',
-      caveatsAndLimitations: 'Evaluado sobre el subgrafo de 36 cuentas activas capturadas.'
-    },
-    {
-      dimension: '2. Sincronía Temporal',
-      confidenceLevel: 'HIGH',
-      technicalGrounding: '28 réplicas en 16.20s con jitter < 0.35s medido con NTP Stratum 1.',
-      caveatsAndLimitations: 'Margen de error de medición en colas de scraping ±0.045s.'
-    },
-    {
-      dimension: '3. Duplicación Semántica',
-      confidenceLevel: 'HIGH',
-      technicalGrounding: 'Similitud léxica Jaccard > 0.95 sobre plantilla idéntica.',
-      caveatsAndLimitations: 'No descarta usuarios compulsivos no automatizados.'
-    },
-    {
-      dimension: '4. Clasificación de Automatización',
-      confidenceLevel: 'HIGH',
-      technicalGrounding: 'Modelo AegisNet-CIB-v1.2 (P=0.94), huella TLS JA3 compatible con scripts.',
-      caveatsAndLimitations: 'Tasa estimada de falsos positivos del 3.8% en benchmark.'
-    },
-    {
-      dimension: '5. Infraestructura BGP / Red',
-      confidenceLevel: 'MEDIUM',
-      technicalGrounding: 'MaxMind GeoLite2: Selectel VPS (AS48282) y Maroc Telecom (AS36903).',
-      caveatsAndLimitations: 'IPs de proxies y hosting comercial; no revelan la ubicación del operador.'
-    },
-    {
-      dimension: '6. Atribución Estatal',
-      confidenceLevel: 'UNKNOWN_UNVERIFIED',
-      technicalGrounding: 'FUERA DE ALCANCE TELEMÉTRICO. Servidores de alquiler comercial ordinario.',
-      caveatsAndLimitations: 'No procede imputación a agencias de inteligencia o Estados soberanos.'
-    },
-    {
-      dimension: '7. Intencionalidad Política',
-      confidenceLevel: 'UNKNOWN_UNVERIFIED',
-      technicalGrounding: 'La ciencia de datos computa anomalías estadísticas, no dolo subjetivo.',
-      caveatsAndLimitations: 'La intención es una categoría procesal externa al peritaje de red.'
-    }
-  ];
+  const matrix = campaign.confidenceMatrix && campaign.confidenceMatrix.length
+    ? campaign.confidenceMatrix
+    : [
+        {
+          dimension: '1. Nivel de verificación de los hallazgos',
+          confidenceLevel: 'UNKNOWN_UNVERIFIED',
+          technicalGrounding: 'Esta campaña no expone una matriz de confianza estructurada.',
+          caveatsAndLimitations: 'Refleja el origen (captura directa, reconstrucción documentada o demo); no hay verificación cuantitativa adicional en este registro.'
+        }
+      ];
 
   doc.setFontSize(6.5);
   matrix.forEach((item, idx) => {
@@ -591,10 +568,10 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   const ntpText =
     '• Reloj de referencia: NTP Stratum 1 sincronizado con pool.ntp.org y Cloudflare Time Daemon (Margen de medición: ±0.045s).\n' +
     '• Distinción de sellos: Los tiempos reflejados corresponden a timestamp_source_utc emitido por los servidores de las plataformas ' +
-    'contrastado con timestamp_ingestion_utc del cluster de captura pericial WORM.\n' +
+    'contrastado con timestamp_ingestion_utc del cluster de captura forense WORM.\n' +
     '• Justificación científica del dictamen: En seres humanos, la mecanografía, copiado y reenvío de un texto complejo en ' +
     'dispositivos móviles requiere un mínimo de 3.5 a 5.0 segundos. Ráfagas simultáneas con desvío estándar de reloj (cron-jitter) ' +
-    'inferior a 0.35s entre cuentas formalmente distintas demuestran de forma irrebatible automatización por script o webhook API.';
+    'inferior a 0.35s entre cuentas formalmente distintas sugiere consistentemente automatización por script o webhook API.';
   doc.text(doc.splitTextToSize(ntpText, pageWidth - 36), 18, y + 9);
 
   y += 33;
@@ -602,7 +579,7 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setTextColor(15, 23, 42);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('7. REGISTRO FORENSE DE LA MICRO-RÁFAGA (VENTANA DE OBSERVACIÓN: 16.20 SEGUNDOS)', 14, y);
+  doc.text('7. REGISTRO FORENSE DE MICRO-RÁFAGA (SI APLICA)', 14, y);
 
   y += 4.5;
 
@@ -669,6 +646,14 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
     y += 6.2;
   });
 
+  if (displayEvents.length === 0) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(100, 116, 139);
+    doc.text('No se registraron micro-ráfagas de eventos en la ventana de observación de esta campaña.', 14, y + 3);
+    y += 8;
+  }
+
   drawPageFooter(doc, campaign, 3, totalPages);
 
   // =========================================================================
@@ -687,16 +672,16 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   y += 4.5;
 
   const exif = campaign.exifForensics?.[0] || {
-    filename: 'valla_ceuta_urgente_0215am.mp4',
-    mediaHashPHash: '9f8e7d6c5b4a3921',
-    exifStripped: true,
-    claimedContext: 'Asalto masivo armado en directo en el perímetro de Benzú (18/07/2026 02:15 UTC)',
-    trueOriginContext: 'Archivo Audiovisual RTVE / EFE: Salto del perímetro de Ceuta ocurrido el 26/07/2018',
-    historicalArchiveMatch: 'RTVE Archivo Histórico ID: VID-20180726-CEUTA-0881',
-    matchPercentage: 99.4,
-    elaIntegrityScore: 18,
-    verdict: 'MANIPULACIÓN CONFIRMADA: Metadatos EXIF borrados deliberadamente con herramientas de stripping. Recorte de franja inferior para eliminar el rótulo de telediario de 2018.'
-  };
+    filename: null,
+    mediaHashPHash: null,
+    exifStripped: null,
+    claimedContext: null,
+    trueOriginContext: null,
+    historicalArchiveMatch: null,
+    matchPercentage: null,
+    elaIntegrityScore: null,
+    verdict: 'Sin cotejo audiovisual registrado para esta campaña.'
+  } as any;
 
   doc.setFillColor(248, 250, 252);
   doc.rect(14, y, pageWidth - 28, 48, 'F');
@@ -706,7 +691,7 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setFontSize(7.2);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(30, 41, 59);
-  doc.text(`Fichero Audiovisual Auditado: ${exif.filename}`, 18, y + 5);
+  doc.text(`Fichero Audiovisual Auditado: ${exif.filename || '— sin registro —'}`, 18, y + 5);
 
   doc.setFont('courier', 'bold');
   doc.setFontSize(6.8);
@@ -716,25 +701,23 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.8);
   doc.setTextColor(185, 28, 28);
-  doc.text(`Contexto Alegado en Campaña: "${exif.claimedContext}"`, 18, y + 14.5);
+  doc.text(`Contexto Alegado en Campaña: "${exif.claimedContext || '— sin registro —'}"`, 18, y + 14.5);
 
   doc.setTextColor(22, 101, 52);
-  doc.text(`Origen Real Comprobado: "${exif.trueOriginContext}"`, 18, y + 19.5);
+  doc.text(`Origen Real Comprobado: "${exif.trueOriginContext || '— sin registro —'}"`, 18, y + 19.5);
 
   doc.setTextColor(71, 85, 105);
-  doc.text(`Cotejo Documental: ${exif.historicalArchiveMatch}  |  Coincidencia Fotogramas: ${exif.matchPercentage}%`, 18, y + 24.5);
+  doc.text(`Cotejo Documental: ${exif.historicalArchiveMatch || 'sin cotejo'}  |  Coincidencia Fotogramas: ${exif.matchPercentage != null ? exif.matchPercentage + '%' : 'N/D'}`, 18, y + 24.5);
 
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(30, 41, 59);
-  doc.text('Análisis Pericial de Manipulación:', 18, y + 29.5);
+  doc.text('Análisis Técnico de Manipulación:', 18, y + 29.5);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.5);
   doc.setTextColor(51, 65, 85);
   const splitExifVerdict = doc.splitTextToSize(
-    'Se constata el borrado deliberado de metadatos IPTC y XMP (EXIF Stripping) para impedir la trazabilidad original del archivo. ' +
-      'Asimismo, el análisis forense de niveles de error (ELA Score: 18) y resolución muestra un recorte de 48 píxeles en la franja inferior ' +
-      'para eliminar el faldón informativo original de la retransmisión televisiva del año 2018.',
+    exif.verdict || 'Sin cotejo audiovisual registrado para esta campaña.',
     pageWidth - 36
   );
   doc.text(splitExifVerdict, 18, y + 34);
@@ -810,15 +793,16 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setTextColor(15, 23, 42);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
-  doc.text('10. INVENTARIO INTEGRAL DE LOS 36 NODOS DE LA RED (DATOS PRIMARIOS COMPLETOS)', 14, y);
+  doc.text('10. INVENTARIO INTEGRAL DE NODOS DE LA RED (DATOS PRIMARIOS COMPLETOS)', 14, y);
 
   y += 3.5;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.5);
   doc.setTextColor(71, 85, 105);
   doc.text(
-    'Para garantizar la total reproducibilidad y eliminar cualquier asimetría de "caja negra", se relacionan la totalidad ' +
-      'de las 36 entidades que conforman el subgrafo de estudio con sus parámetros técnicos de red y probabilidad de bot.',
+    'Para garantizar la reproducibilidad, se relacionan las ' +
+      campaign.nodes.length +
+      ' entidades que conforman el subgrafo de estudio con sus parámetros técnicos de red. Los campos sin datos disponibles (N/D) reflejan la ausencia de telemetría, no se rellenan con inferencias.',
     14,
     y
   );

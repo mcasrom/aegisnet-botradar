@@ -352,7 +352,7 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
         { handle: '@FronteraAlerta_04', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:02.80Z', followers: 1, following: 1890 },
         { handle: '@IberiaDespierta_92', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes hacia el casco urbano. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:03.12Z', followers: 4, following: 2100 },
         { handle: '@VozVeritas_Sur', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:03.45Z', followers: 3, following: 2250 },
-        { handle: '@VerificaCeuta_FactCheck', platform: 'x_twitter', text: 'DESMENTIDO URGENTE: El vídeo viral de esta madrugada en Ceuta corresponde a sucesos del 26 de julio de 2018 (archivo RTVE). Calma ciudadana.', timestamp: '2026-07-18T03:10:00Z', followers: 42100, following: 340 }
+        { handle: '@Verifica_FactCheck', platform: 'x_twitter', text: 'DESMENTIDO URGENTE: El vídeo difundido esta madrugada es un material filmado con anterioridad y está siendo difundido fuera de su contexto cronológico original. Calma ciudadana.', timestamp: '2026-07-18T03:10:00Z', followers: 42100, following: 340 }
       ];
       const jsonStr = JSON.stringify(data, null, 2);
       setRawText(jsonStr);

@@ -191,7 +191,7 @@ export const SemanticNLPView: React.FC<SemanticNLPViewProps> = ({ campaign }) =>
                         Alerta de Descontextualización Multimedia (pHash Match)
                       </h5>
                       <p className="mt-1 text-xs text-slate-300 leading-relaxed">
-                        El material gráfico adjunto en este clúster coincide en un <span className="font-mono font-bold text-orange-200">99.4%</span> mediante Perceptual Hashing (pHash) con una fotografía capturada originalmente en noviembre de 2019. Se eliminaron los metadatos EXIF originales para presentarla falsamente como un hecho acontecido durante la jornada electoral actual.
+                        El material gráfico adjunto en este clúster coincide significativamente mediante Perceptual Hashing (pHash) con un material fechado con anterioridad al episodio investigado. Se eliminaron los metadatos EXIF originales, lo que sugiere una posible presentación fuera de contexto cronológico.
                       </p>
                     </div>
                   </div>

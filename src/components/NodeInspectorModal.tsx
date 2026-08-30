@@ -366,7 +366,7 @@ export const NodeInspectorModal: React.FC<NodeInspectorModalProps> = ({ node, on
                     </div>
                   </div>
                   <div className="mt-2 text-[10px] text-slate-400 border-t border-[#1E293B]/60 pt-1.5">
-                    <strong>Dictamen Técnico:</strong> {node.zombieAudit?.marketEvidenceNote || 'Sin anomalías registradas.'}
+                    <strong>Análisis Técnico:</strong> {node.zombieAudit?.marketEvidenceNote || 'Sin anomalías registradas.'}
                   </div>
                 </div>
               </div>

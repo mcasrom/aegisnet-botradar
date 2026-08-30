@@ -330,7 +330,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-1.5 rounded-sm bg-indigo-600 hover:bg-indigo-500 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>Dossier Pericial</span>
+            <span>Informe Técnico OSINT</span>
           </button>
         </div>
       </div>

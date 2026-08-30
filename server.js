@@ -125,6 +125,11 @@ function buildCaseCampaign(file) {
     if (h.envio_masivo) node.cibScore = Math.min(92, node.cibScore + 8);
     if (h.nivel_verificacion === 'PREGUNTA') node.cibScore = Math.min(node.cibScore, 25);
   });
+  chanMap.forEach((node) => {
+    const posts = node.contentMetrics.samplePosts || [];
+    const dups = posts.filter((p) => p.isExactDuplicate).length;
+    node.contentMetrics.exactCopyPasteRatio = posts.length ? dups / posts.length : 0;
+  });
   const nodesArr = Array.from(chanMap.values());
   hallazgos.forEach((h, i) => {
     const srcKey = (h.canal || '').toLowerCase().replace(/\s+/g, '-').slice(0, 40);
@@ -261,6 +266,12 @@ function buildCampaign(entidad, entData, hallazgos) {
       node.cibScore = Math.min(90, node.cibScore + 10);
       node.type = node.cibScore >= 75 ? 'bot' : node.type;
     }
+  });
+
+  chanMap.forEach((node) => {
+    const posts = node.contentMetrics.samplePosts || [];
+    const dups = posts.filter((p) => p.isExactDuplicate).length;
+    node.contentMetrics.exactCopyPasteRatio = posts.length ? dups / posts.length : 0;
   });
 
   // Conecta canales con mismo envio_masivo / señal_severa (células)
