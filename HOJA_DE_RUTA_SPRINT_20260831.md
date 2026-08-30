@@ -22,6 +22,14 @@ tabla de eventos primarios, y etiqueta "Crítico/Severo" para CIB 40.
 | U1 | **Eliminar el scroll que "esconde" el contenido** | La vista de Línea de Acción OSINT muestra el contenido en una zona estrecha que obliga a scroll excesivo; el contenido parece "escondido". Rediseñar: panel de fases compacto, checklist en grid-2 (ya hecho parcialmente), y que la fase activa ocupe el ancho sin requerir scroll vertical para ver lo esencial. | El contenido esencial (caso, CIB, checklist) visible sin scroll; solo scroll para profundizar |
 | U2 | **Fases como pestañas desplegables** | En vez de una sola fase larga a la vez con todo apilado, mostrar las 5 fases como pestañas/accordion colapsadas para navegar sin scroll largo. | Navegación por fases sin scroll excesivo |
 
+## PRIORIDAD 0b — L2R: Lessons Learned Report (crítica de Perplexity)
+
+| # | Tarea | Detalle | Aceptación |
+|---|---|---|---|
+| L1 | **Crear L2R de la crítica de Perplexity** | Convertir la crítica del dossier (30/08) en un documento Lessons Learned: qué falló, qué se corrigió ya, qué queda. Estructura: (1) contexto, (2) hallazgos de la crítica, (3) acciones tomadas, (4) lecciones, (5) acciones pendientes. | L2R.md versionado en el repo |
+| L2 | **Verificar que cada lección tiene acción** | Mapear cada punto de la crítica a un estado: CORREGIDO (con commit) / PENDIENTE (en sprint). Sin lecciones huérfanas. | Tabla crítica→estado completa |
+| L3 | **Adjuntar el análisis a la bitácora** | Añadir entrada en SEGUIMIENTO.md con el L2R y el estado de cada punto. | Bitácora actualizada |
+
 ## PRIORIDAD 1 — Hacer el PDF reproducible (bloquea todo lo demás)
 
 | # | Tarea | Detalle | Aceptación |
