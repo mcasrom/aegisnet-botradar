@@ -36,6 +36,7 @@ export default function App() {
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
   const [appVersion, setAppVersion] = useState<string>('1.2.0');
   const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about'>('action');
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(true);
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
   React.useEffect(() => {
