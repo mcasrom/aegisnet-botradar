@@ -1,5 +1,5 @@
 {
-  "generado_utc": "2026-08-30T21:15:00Z",
+  "generado_utc": "2026-08-30T21:25:00Z",
   "descripcion": "Caso REAL: asalto masivo a la valla de Ceuta (jul 2026). Dataset reconstruido a partir de la documentacion verificada del proyecto (CASOS/ceuta-sucesos-previa.md), con fuentes publicas citadas (Maldita.es '51 bulos...', Newtral, EFE, BBC, Al Arabiya). Cada hallazgo registra fecha, nivel de verificacion (HECHO/HIPOTESIS/PREGUNTA) y fuente real. NO incluye datos inventados.",
   "metodologia": "Los items provienen de verificadores periodisticos publicos que documentaron la campana de desinformacion previa y durante el asalto. La nota metodologica aclara: los canales de campana no estan monitorizados y no hay datos capturados de julio por el pipeline (registra desde 28-ago); la continuidad de amplificadores es PREGUNTA ABIERTA.",
   "entidad": "ceuta",
@@ -290,6 +290,21 @@
       "nivel_verificacion": "HIPOTESIS",
       "fecha_evento": "2026-08-25",
       "ts": "2026-08-25T00:00:00+00:00"
+    },
+    {
+      "tipo": "documentado",
+      "canal": "analisis",
+      "titulo": "CONTEXTO VERIFICADO: Marruecos tiene uno de los mayores gastos militares del mundo (% del PIB) y a China entre sus proveedores legales de armas. Presupuesto de defensa ~15.700 millones USD (119.766 mil millones MAD) para 2026, ~8.5% del PIB (Statista). Proveedores extranjeros: EE.UU., Reino Unido, Espana, Francia, Italia, China, Rusia, Turquia, Israel, Brasil, etc. (SIPRI/Wikipedia). NO implica injerencia china en Ceuta: es contexto de capacidades, no atribucion.",
+      "url": "https://en.wikipedia.org/wiki/Military_of_Morocco",
+      "fuente": "Wikipedia (citando IISS Military Balance, Statista, Morocco World News 20-oct-2025) — gasto militar y proveedores de Marruecos",
+      "entidad": "ceuta",
+      "nombre_entidad": "Ceuta: asalto a la valla de Julio 2026 (caso documentado)",
+      "entidad_region": "Espana",
+      "senal_severa": false,
+      "envio_masivo": false,
+      "nivel_verificacion": "HECHO",
+      "fecha_evento": "2026-10-20",
+      "ts": "2026-10-20T00:00:00+00:00"
     }
   ]
 }
