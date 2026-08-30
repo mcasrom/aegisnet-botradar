@@ -246,6 +246,57 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
         </div>
       </div>
 
+      {/* Matriz de Confianza (nivel de verificación y limitaciones) */}
+      {Array.isArray(campaign.confidenceMatrix) && campaign.confidenceMatrix.length > 0 && (
+        <div className="mb-5 rounded-sm border border-cyan-500/30 bg-[#0A0F1E] p-4">
+          <div className="mb-3 flex items-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center rounded-sm border border-cyan-500/40 bg-cyan-950/40 text-cyan-400">
+              <Info className="h-3.5 w-3.5" />
+            </div>
+            <h3 className="text-sm font-bold tracking-tight text-cyan-200">Matriz de Confianza</h3>
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">nivel de verificación de los hallazgos</span>
+          </div>
+          <div className="space-y-2.5">
+            {campaign.confidenceMatrix.map((cm, i) => {
+              const lvl = cm.confidenceLevel || 'UNKNOWN_UNVERIFIED';
+              const cfg =
+                lvl === 'HIGH'
+                  ? { label: 'ALTA', badge: 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300', bar: 'bg-emerald-500' }
+                  : lvl === 'MEDIUM'
+                  ? { label: 'MEDIA', badge: 'border-amber-500/40 bg-amber-950/40 text-amber-300', bar: 'bg-amber-500' }
+                  : lvl === 'LOW'
+                  ? { label: 'BAJA', badge: 'border-orange-500/40 bg-orange-950/40 text-orange-300', bar: 'bg-orange-500' }
+                  : { label: 'NO VERIFICADO', badge: 'border-rose-500/40 bg-rose-950/40 text-rose-300', bar: 'bg-rose-500' };
+              return (
+                <div key={i} className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs font-bold text-slate-200">{cm.dimension}</span>
+                    <span className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold ${cfg.badge}`}>
+                      CONFIANZA {cfg.label}
+                    </span>
+                  </div>
+                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+                    <div className={`h-full ${cfg.bar}`} style={{ width: lvl === 'HIGH' ? '90%' : lvl === 'MEDIUM' ? '55%' : lvl === 'LOW' ? '25%' : '8%' }}></div>
+                  </div>
+                  {cm.technicalGrounding && (
+                    <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
+                      <span className="font-semibold text-slate-300">Fundamento técnico: </span>
+                      {cm.technicalGrounding}
+                    </p>
+                  )}
+                  {cm.caveatsAndLimitations && (
+                    <p className="mt-1.5 flex items-start gap-1.5 text-[11px] leading-relaxed text-amber-300/90">
+                      <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
+                      <span>{cm.caveatsAndLimitations}</span>
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Action Roadmap Progress: 5 Consecutive Steps */}
       <div className="mb-6 grid grid-cols-1 gap-2.5 sm:grid-cols-5">
         {[
