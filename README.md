@@ -10,7 +10,7 @@ digitales (X/Twitter, Telegram, Meta, YouTube).
 
 ## ¿Qué hace?
 
-Plataforma de trabajo pericial OSINT que procesa datasets de publicaciones de redes sociales y
+Plataforma de trabajo técnico OSINT que procesa datasets de publicaciones de redes sociales y
 calcula métricas forenses de coordinación inauténtica. Desde la **Fase 1** (ver
 `HOJA_DE_RUTA_RECONFIGURACION.md`) se alimenta de **datos reales** del pipeline
 `oasis.py` (Telegram/verificadores monitorizados por cron), no de muestras inventadas:
@@ -27,6 +27,15 @@ calcula métricas forenses de coordinación inauténtica. Desde la **Fase 1** (v
 - **Cadena de custodia**: sellado SHA-256 (ISO/IEC 27037), formularios de takedown y reporte
   forense exportable a PDF (jsPDF).
 - **Ingesta manual**: carga de datasets reales en JSON/CSV (pegando texto o subiendo archivo).
+
+### Caso real de estudio: asalto a la valla de Ceuta (julio 2026)
+
+El repositorio incluye un caso de estudio documentado (`CASOS/caso_ceuta-julio-2026.json`)
+reconstruido a partir de **documentación pública verificada** (Maldita.es "51 bulos", Newtral,
+EFE, BBC, Al Arabiya, Tribunal Supremo, Moncloa, Informe de Seguridad Nacional 2025). Cada
+hallazgo registra fecha real, fuente real y nivel de verificación (HECHO / HIPÓTESIS / PREGUNTA).
+Se sirve en el panel como campaña con badge **"CASO DOCUMENTADO"**, SHA-256 del dataset,
+matriz de confianza y cadena de custodia. No incluye datos inventados.
 
 ### Modo demo (claramente señalado)
 
@@ -45,8 +54,6 @@ explícitamente.
   envío masivo, duplicación); no reemplaza un análisis de topología completo con aristas de
   interacción real (fase 2 del roadmap).
 - Los **datasets de demostración** quedan solo en modo demo, claramente etiquetados.
-- La **capacidad Gemini** declarada en `metadata.json` es intención de la plataforma AI Studio;
-  **no hay llamadas a Gemini implementadas** en este código.
 
 ## Requisitos
 
