@@ -21,6 +21,7 @@ import { createHash } from 'crypto';
 
 const PORT = process.env.PORT || 3789;
 const DATOS_DIR = process.env.DATOS_DIR || join(process.cwd(), 'DATOS');
+const CASES_DIR = process.env.CASES_DIR || join(process.cwd(), 'CASOS');
 // Si existe un build estático, se sirve junto a la API (mismo origen).
 const DIST_DIR = process.env.DIST_DIR || join(process.cwd(), 'dist');
 
@@ -58,6 +59,134 @@ function listSenalFiles() {
 function latestSenaFile() {
   const files = listSenalFiles();
   return files.length ? files[0] : null;
+}
+
+/** Archivos de casos documentados (patrón caso_<slug>.json) */
+function listCaseFiles() {
+  const dirs = [CASES_DIR, DATOS_DIR];
+  for (const dir of dirs) {
+    try {
+      if (existsSync(dir)) {
+        const f = readdirSync(dir).filter((f) => /^caso_[a-z0-9-]+\.json$/.test(f)).sort();
+        if (f.length) return f;
+      }
+    } catch (_e) { /* ignorar dir no legible */ }
+  }
+  return [];
+}
+
+/** Convierte un archivo caso_*.json (documentación verificada) en campaña */
+function buildCaseCampaign(file) {
+  const dir = existsSync(join(CASES_DIR, file)) ? CASES_DIR : DATOS_DIR;
+  const data = readJson(join(dir, file));
+  if (!data || !Array.isArray(data.hallazgos)) return null;
+  const slug = file.replace(/^caso_/, '').replace(/\.json$/, '');
+  const hallazgos = data.hallazgos;
+  const nodes = [];
+  const edges = [];
+  const chanMap = new Map();
+  hallazgos.forEach((h, i) => {
+    const key = (h.canal || h.fuente || `fuente_${i}`).toLowerCase().replace(/\s+/g, '-').slice(0, 40) || `canal_${i}`;
+    if (!chanMap.has(key)) {
+      chanMap.set(key, {
+        id: `node_${slug}_${canonical(key)}`,
+        handle: formatHandle(key),
+        platform: h.tipo === 'documentado' || h.tipo === 'contexto' ? 'telegram' : 'x_twitter',
+        displayName: h.canal || key,
+        type: h.señal_severa && !h.nivel_verificacion === 'PREGUNTA' ? 'suspicious' : 'organic',
+        cibScore: h.señal_severa ? 78 : 30,
+        creationDate: h.ts || data.generado_utc || new Date().toISOString(),
+        accountAgeDays: 0,
+        followersCount: 10,
+        followingCount: 0,
+        followerFollowingRatio: 0,
+        totalPosts: 0,
+        postsPerDay: 0,
+        louvainCommunity: 0,
+        centrality: { degree: 0, betweenness: 0, pageRank: 0.05, clusteringCoefficient: 0 },
+        temporalMetrics: { medianIntervalSeconds: 0, intervalJitterSeconds: 0, burstCount: 0, nightActivityRatio: 0 },
+        contentMetrics: {
+          exactCopyPasteRatio: 0,
+          sentimentPolarizationIndex: 0.5,
+          topHashTags: ['#Ceuta', '#Julio2026'],
+          samplePosts: []
+        }
+      });
+    }
+    const node = chanMap.get(key);
+    node.totalPosts += 1;
+    node.contentMetrics.samplePosts.push({
+      id: `post_${slug}_${i}`,
+      timestamp: h.ts || new Date().toISOString(),
+      text: `${h.titulo || ''} [${h.nivel_verificacion || 'HECHO'}] | ${h.fuente || ''}`.slice(0, 280),
+      isExactDuplicate: !!h.envio_masivo,
+      sharesOrRetweets: 0
+    });
+    if (h.envio_masivo) node.cibScore = Math.min(92, node.cibScore + 8);
+    if (h.nivel_verificacion === 'PREGUNTA') node.cibScore = Math.min(node.cibScore, 25);
+  });
+  const nodesArr = Array.from(chanMap.values());
+  hallazgos.forEach((h, i) => {
+    const srcKey = (h.canal || '').toLowerCase().replace(/\s+/g, '-').slice(0, 40);
+    const src = chanMap.get(srcKey);
+    for (let j = i + 1; j < hallazgos.length; j += 1) {
+      const h2 = hallazgos[j];
+      const dstKey = (h2.canal || '').toLowerCase().replace(/\s+/g, '-').slice(0, 40);
+      const dst = chanMap.get(dstKey);
+      if (src && dst && src.id !== dst.id && h.entidad === h2.entidad) {
+        edges.push({
+          id: `edge_${slug}_${i}_${j}`,
+          source: src.id,
+          target: dst.id,
+          type: 'mention',
+          weight: h2.nivel_verificacion === 'HECHO' ? 3 : 1,
+          timestamp: h2.ts || new Date().toISOString(),
+          isBurstEdge: !!h.envio_masivo && !!h2.envio_masivo
+        });
+      }
+    }
+  });
+  nodesArr.forEach((n) => (n.centrality.degree = edges.filter((e) => e.source === n.id || e.target === n.id).length));
+  const cib = computeCibFromCampaign(nodesArr, edges);
+  return {
+    id: slug,
+    title: data.nombre_entidad || slug.replace(/-/g, ' '),
+    electoralProcess: data.entidad_region || 'Casos documentados',
+    electoralContext: data.descripcion || '',
+    status: 'INVESTIGATION_ONGOING',
+    reportClassification: 'ACTIVE_AUDIT',
+    investigationCode: `AEGIS-2026-DOC-${slug.toUpperCase().slice(0, 6)}`,
+    createdAt: data.generado_utc || new Date().toISOString(),
+    datasetSha256: sha256File(join(existsSync(join(CASES_DIR, file)) ? CASES_DIR : DATOS_DIR, file)) || 'no-disponible',
+    targetPlatforms: ['x_twitter', 'telegram'],
+    nodes: nodesArr,
+    edges,
+    cibBreakdown: cib,
+    astroturfClusters: [],
+    geopoliticalVectors: [],
+    exifForensics: [],
+    burstEvents: [],
+    confidenceMatrix: [
+      {
+        dimension: 'Verificación de los hallazgos',
+        confidenceLevel: hallazgos.some((h) => h.nivel_verificacion === 'HIPOTESIS' || h.nivel_verificacion === 'PREGUNTA') ? 'MEDIUM' : 'HIGH',
+        technicalGrounding: data.metodologia || 'Casos documentados por verificadores públicos',
+        caveatsAndLimitations: 'Reconstrucción desde documentación pública; no captura directa de canales de campaña.'
+      }
+    ],
+    chainOfCustody: [
+      {
+        step: 1,
+        phase: 'Caso documentado (verificado)',
+        timestampUtc: data.generado_utc || new Date().toISOString(),
+        actor: 'documentación del proyecto',
+        evidenceHashSha256: sha256File(join(existsSync(join(CASES_DIR, file)) ? CASES_DIR : DATOS_DIR, file)) || 'no-disponible',
+        actionDescription: `Lectura de ${file} (documentación verificada con fuentes públicas)`
+      }
+    ],
+    summaryDescription: data.descripcion || '',
+    totalCollectedEvents: hallazgos.length
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -279,27 +408,34 @@ app.get('/api/campaigns', (_req, res) => {
   const hallazgos = senales?.hallazgos || [];
   const entidades = estado?.entidades || {};
 
-  const campaigns = Object.keys(entidades)
-    .map((ent) => {
-      const c = buildCampaign(ent, entidades[ent], hallazgos);
-      return {
-        id: c.id,
-        title: c.title,
-        electoralProcess: c.electoralProcess,
-        status: c.status,
-        reportClassification: c.reportClassification,
-        createdAt: c.createdAt,
-        summaryDescription: c.summaryDescription,
-        nNodes: c.nodes.length,
-        nEdges: c.edges.length,
-        cibBreakdown: c.cibBreakdown,
-        totalCollectedEvents: c.totalCollectedEvents,
-        datasetSha256: c.datasetSha256
-      };
-    })
+  const summarize = (c) => ({
+    id: c.id,
+    title: c.title,
+    electoralProcess: c.electoralProcess,
+    status: c.status,
+    reportClassification: c.reportClassification,
+    createdAt: c.createdAt,
+    summaryDescription: c.summaryDescription,
+    nNodes: c.nodes.length,
+    nEdges: c.edges.length,
+    cibBreakdown: c.cibBreakdown,
+    totalCollectedEvents: c.totalCollectedEvents,
+    datasetSha256: c.datasetSha256
+  });
+
+  const base = Object.keys(entidades)
+    .map((ent) => buildCampaign(ent, entidades[ent], hallazgos))
+    .map(summarize)
     .filter((c) => c.nNodes > 0);
 
-  res.json({ generatedAt: senales?.generado_utc || new Date().toISOString(), count: campaigns.length, campaigns });
+  // Casos documentados (caso_*.json)
+  const documented = listCaseFiles()
+    .map((f) => buildCaseCampaign(f))
+    .filter((c) => c && c.nodes && c.nodes.length > 0)
+    .map(summarize);
+
+  const campaigns = [...documented, ...base];
+  res.json({ generatedAt: senales?.generado_utc || new Date().toISOString(), count: campaigns.length, campaigns, nDocumented: documented.length, nPipeline: base.length });
 });
 
 app.get('/api/campaigns/:id', (req, res) => {
@@ -309,8 +445,17 @@ app.get('/api/campaigns/:id', (req, res) => {
   const hallazgos = senales?.hallazgos || [];
   const entidades = estado?.entidades || {};
   const ent = req.params.id;
-  if (!entidades[ent]) return res.status(404).json({ error: 'Entidad no encontrada' });
-  res.json(buildCampaign(ent, entidades[ent], hallazgos));
+
+  // 1. Caso documentado (caso_*.json)
+  const caseFile = `caso_${ent}.json`;
+  if (existsSync(join(existsSync(join(CASES_DIR, caseFile)) ? CASES_DIR : DATOS_DIR, caseFile))) {
+    const c = buildCaseCampaign(caseFile);
+    if (c) return res.json(c);
+  }
+  // 2. Entidad del pipeline
+  if (entidades[ent]) return res.json(buildCampaign(ent, entidades[ent], hallazgos));
+
+  res.status(404).json({ error: 'Entidad o caso no encontrado' });
 });
 
 app.get('/api/raw/estado', (_req, res) => {
@@ -337,9 +482,15 @@ if (existsSync(join(DIST_DIR, 'index.html'))) {
   console.log('[aegisnet] warning: DIST_DIR sin index.html (frontend no compilado). Solo API.');
 }
 
-app.listen(PORT, () => {
-  console.log(`[aegisnet] API real escuchando en :${PORT}`);
-  console.log(`[aegisnet] DATOS_DIR=${DATOS_DIR}`);
-  const estado = readJson(join(DATOS_DIR, 'estado.json'));
-  console.log(`[aegisnet] entidades en estado.json: ${estado?.entidades ? Object.keys(estado.entidades).length : 0}`);
-});
+if (process.env.NODE_ENV !== 'test' && !process.argv[1]?.endsWith('server.js')) {
+  console.log('[aegisnet] server.js importado como módulo (test), no se inicia listen');
+} else {
+  app.listen(PORT, () => {
+    console.log(`[aegisnet] API real escuchando en :${PORT}`);
+    console.log(`[aegisnet] DATOS_DIR=${DATOS_DIR}`);
+    const estado = readJson(join(DATOS_DIR, 'estado.json'));
+    console.log(`[aegisnet] entidades en estado.json: ${estado?.entidades ? Object.keys(estado.entidades).length : 0}`);
+  });
+}
+
+export { listCaseFiles, buildCaseCampaign, listSenalFiles, latestSenaFile, formatHandle, computeCibFromCampaign, canonical, readJson, sha256File };
