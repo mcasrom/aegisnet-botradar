@@ -1,17 +1,21 @@
 /**
- * AegisNet-BotRadar: Datasets Forenses Preconfigurados para Análisis y Detección
- * Casos de estudio realistas y estrictamente apartidistas.
+ * AegisNet-BotRadar: DATASETS DE DEMOSTRACIÓN (NO SON EVIDENCIA REAL)
+ * ⚠️ ATENCIÓN: Estas campañas son EJEMPLOS ILUSTRATIVOS diseñados para probar la UI del motor.
+ * NO son datos de campo capturados. Jamás deben tratarse como evidencia forense.
+ * Los datos reales provienen del backend /api/campaigns (pipeline oasis.py).
  * Copyright © M. Castillo — Contacto: mailto:mybloggingnotes@gmail.com
  */
 
-import { 
-  InvestigationCampaign, 
-  SocialAccountNode, 
-  NetworkEdge, 
-  ConfidenceMatrixItem, 
-  ClassifierBenchmark, 
-  ChainOfCustodyStep, 
-  BurstEventRecord 
+// (Dataset preconfigurado de DEMOSTRACIÓN — cuentas, fechas y métricas son ficticias.)
+
+import {
+  InvestigationCampaign,
+  SocialAccountNode,
+  NetworkEdge,
+  ConfidenceMatrixItem,
+  ClassifierBenchmark,
+  ChainOfCustodyStep,
+  BurstEventRecord
 } from '../types/botradar';
 
 // Helper to generate coordinates in a cluster or radial layout
@@ -1117,7 +1121,7 @@ const c1Data = generateCampaign1Data();
 const c2Data = generateCampaign2Data();
 const c3Data = generateCampaign3Data();
 
-export const INITIAL_CAMPAIGNS: InvestigationCampaign[] = [
+export const DEMO_CAMPAIGNS: InvestigationCampaign[] = [
   {
     id: 'camp_ceuta_valla_2026',
     title: 'Incidente Monitorizado: Difusión Coordinada Anómala en Torno a la Frontera de Ceuta (Julio 2026)',

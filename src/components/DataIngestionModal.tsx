@@ -14,6 +14,7 @@ import {
   FileText,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   Terminal,
   Search,
   Globe,
@@ -24,7 +25,8 @@ import {
   ArrowRight,
   ShieldCheck,
   RefreshCw,
-  FileSpreadsheet
+  FileSpreadsheet,
+  FlaskConical
 } from 'lucide-react';
 import { PlatformType, SocialAccountNode, NetworkEdge, InvestigationCampaign } from '../types/botradar';
 import { computeComprehensiveCIBScore, calculateJaccardSimilarity } from '../services/cibEngine';
@@ -437,57 +439,48 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
         <div className="flex-1 space-y-4 overflow-y-auto p-6 text-xs text-[#E2E8F0]">
           {activeTab === 'upload_data' ? (
             <>
-              {/* Benchmark Shortcuts for Real Data */}
-              <div>
-                <label className="mb-1.5 flex items-center justify-between text-[11px] font-semibold text-slate-400">
-                  <span className="flex items-center gap-1 text-slate-300">
-                    <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
-                    Cargar Captura Bruta Real de Benchmark OSINT:
-                  </span>
-                  <span className="text-[10px] text-slate-500">Datasets verificados sin simulación</span>
-                </label>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                  <button
-                    type="button"
-                    onClick={() => loadBenchmarkCapture('ceuta')}
-                    className="flex flex-col rounded-sm border border-[#1E293B] bg-[#0A0C10] p-2.5 text-left hover:border-cyan-500/50 hover:bg-cyan-950/20 text-slate-300 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-white">Frontera Ceuta (Jul 2026)</span>
-                      <span className="font-mono text-[10px] text-cyan-400">JSON</span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 mt-1">
-                      7 publicaciones clave, ráfaga en milisegundos con pHash
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => loadBenchmarkCapture('electoral')}
-                    className="flex flex-col rounded-sm border border-[#1E293B] bg-[#0A0C10] p-2.5 text-left hover:border-cyan-500/50 hover:bg-cyan-950/20 text-slate-300 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-white">Integridad Electoral</span>
-                      <span className="font-mono text-[10px] text-cyan-400">JSON</span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 mt-1">
-                      5 nodos, astroturfing idéntico con jitter 0.25s
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => loadBenchmarkCapture('infra')}
-                    className="flex flex-col rounded-sm border border-[#1E293B] bg-[#0A0C10] p-2.5 text-left hover:border-cyan-500/50 hover:bg-cyan-950/20 text-slate-300 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-white">Infraestructura Crítica</span>
-                      <span className="font-mono text-[10px] text-emerald-400">CSV</span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 mt-1">
-                      Dataset tabular con cabeceras CSV estándar
-                    </span>
-                  </button>
+              {/* ⚠️ MODO DEMO: ejemplos ilustrativos, NO evidencia real */}
+              <div className="rounded-sm border border-amber-500/50 bg-amber-950/20 p-3">
+                <div className="mb-1.5 flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-400" />
+                  <span className="text-[11px] font-bold text-amber-400">DATOS DE EJEMPLO (MODO DEMO) — NO SON EVIDENCIA REAL</span>
+                </div>
+                <p className="mb-2 text-[10px] text-amber-300/80 leading-relaxed">
+                  Estos botones cargan <strong>capturas ficticias diseñadas a mano</strong> solo para probar el motor de análisis.
+                  No provienen de redes reales y jamás deben tratarse como hallazgo forense. Para datos de campo usa el pipeta real
+                  (colectores CLI) con tus propios datasets.
+                </p>
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-1 text-slate-400">
+                    <FlaskConical className="h-3.5 w-3.5" />
+                    Cargar ejemplo de demostración:
+                  </label>
+                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
+                    <button
+                      type="button"
+                      onClick={() => loadBenchmarkCapture('ceuta')}
+                      className="rounded-sm border border-amber-600/50 bg-[#0A0C10] px-2.5 py-1.5 text-left hover:bg-amber-950/30 text-amber-300 transition-colors"
+                    >
+                      <span className="font-bold text-[10px] block">Frontera Ceuta</span>
+                      <span className="font-mono text-[9px] opacity-80">JSON · ficticio</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => loadBenchmarkCapture('electoral')}
+                      className="rounded-sm border border-amber-600/50 bg-[#0A0C10] px-2.5 py-1.5 text-left hover:bg-amber-950/30 text-amber-300 transition-colors"
+                    >
+                      <span className="font-bold text-[10px] block">Integridad Electoral</span>
+                      <span className="font-mono text-[9px] opacity-80">JSON · ficticio</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => loadBenchmarkCapture('infra')}
+                      className="rounded-sm border border-amber-600/50 bg-[#0A0C10] px-2.5 py-1.5 text-left hover:bg-amber-950/30 text-amber-300 transition-colors"
+                    >
+                      <span className="font-bold text-[10px] block">Infraestructura</span>
+                      <span className="font-mono text-[9px] opacity-80">CSV · ficticio</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
