@@ -14,7 +14,6 @@ import {
   FileText,
   CheckCircle2,
   AlertCircle,
-  AlertTriangle,
   Terminal,
   Search,
   Globe,
@@ -25,8 +24,7 @@ import {
   ArrowRight,
   ShieldCheck,
   RefreshCw,
-  FileSpreadsheet,
-  FlaskConical
+  FileSpreadsheet
 } from 'lucide-react';
 import { PlatformType, SocialAccountNode, NetworkEdge, InvestigationCampaign } from '../types/botradar';
 import { computeComprehensiveCIBScore, calculateJaccardSimilarity } from '../services/cibEngine';
@@ -342,43 +340,6 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
     reader.readAsText(file);
   };
 
-  // 1-Click Real Benchmark Datasets (No fake mocks!)
-  const loadBenchmarkCapture = (type: 'ceuta' | 'electoral' | 'infra') => {
-    if (type === 'ceuta') {
-      const data = [
-        { handle: '@AlertaDirecta_24h', platform: 'telegram', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes hacia el casco urbano. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:02Z', followers: 38400, following: 4 },
-        { handle: '@PatrullaSur_901', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes hacia el casco urbano. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:02.18Z', followers: 2, following: 1980 },
-        { handle: '@CentinelaSur_88', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes hacia el casco urbano. Compartan. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:02.35Z', followers: 5, following: 2400 },
-        { handle: '@FronteraAlerta_04', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:02.80Z', followers: 1, following: 1890 },
-        { handle: '@IberiaDespierta_92', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados y retirada de agentes hacia el casco urbano. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:03.12Z', followers: 4, following: 2100 },
-        { handle: '@VozVeritas_Sur', platform: 'x_twitter', text: 'URGENTE: Colapso del vallado de Ceuta esta noche. Guardias desbordados. #AlertaCeutaJulio2026', timestamp: '2026-07-18T02:15:03.45Z', followers: 3, following: 2250 },
-        { handle: '@Verifica_FactCheck', platform: 'x_twitter', text: 'DESMENTIDO URGENTE: El vídeo difundido esta madrugada es un material filmado con anterioridad y está siendo difundido fuera de su contexto cronológico original. Calma ciudadana.', timestamp: '2026-07-18T03:10:00Z', followers: 42100, following: 340 }
-      ];
-      const jsonStr = JSON.stringify(data, null, 2);
-      setRawText(jsonStr);
-      processRawData(jsonStr);
-    } else if (type === 'electoral') {
-      const data = [
-        { handle: '@CanalResistenciaCivica', platform: 'telegram', text: 'URGENTE: Filtran actas manipuladas en el distrito 4 electoral. Se exige suspensión inmediata de la jornada. #AlertaElectoral2026', timestamp: '2026-08-29T14:02:11Z', followers: 14200, following: 4 },
-        { handle: '@VotoLimpio_Madrid', platform: 'x_twitter', text: 'URGENTE: Filtran actas manipuladas en el distrito 4 electoral. Se exige suspensión inmediata de la jornada. #AlertaElectoral2026', timestamp: '2026-08-29T14:02:11.25Z', followers: 4, following: 2200 },
-        { handle: '@CiudadanoAlerta_31', platform: 'x_twitter', text: 'URGENTE: Filtran actas manipuladas en el distrito 4 electoral. Se exige suspensión inmediata. #AlertaElectoral2026', timestamp: '2026-08-29T14:02:11.50Z', followers: 2, following: 1900 },
-        { handle: '@ElectoralAuditoria_9', platform: 'x_twitter', text: 'URGENTE: Filtran actas manipuladas en el distrito 4 electoral. Se exige suspensión inmediata de la jornada. #AlertaElectoral2026', timestamp: '2026-08-29T14:02:11.85Z', followers: 3, following: 2450 },
-        { handle: '@JuntaElectoralOficial', platform: 'x_twitter', text: 'COMUNICADO OFICIAL: Las mesas electorales del distrito 4 funcionan con absoluta normalidad y presencia de interventores de todos los partidos.', timestamp: '2026-08-29T14:45:00Z', followers: 89000, following: 120 }
-      ];
-      const jsonStr = JSON.stringify(data, null, 2);
-      setRawText(jsonStr);
-      processRawData(jsonStr);
-    } else {
-      const csvStr = `handle,platform,text,timestamp,followers,following
-@PetroAlert_Hub,telegram,"IMPACTANTE: Explosión confirmada en subestación principal de energía. Provisiones agotadas en 48h. #BlackoutTotal",2026-08-28T19:00:00Z,22000,2
-@RedElectricaFallo_1,x_twitter,"IMPACTANTE: Explosión confirmada en subestación principal de energía. Provisiones agotadas en 48h. #BlackoutTotal",2026-08-28T19:00:00.35Z,3,2100
-@AlertaApagon_99,x_twitter,"IMPACTANTE: Explosión confirmada en subestación principal de energía. Provisiones agotadas en 48h. #BlackoutTotal",2026-08-28T19:00:00.60Z,2,1950
-@InfoEmergencias_Oficial,x_twitter,"DESMENTIDO: Red eléctrica operando con normalidad. Ninguna subestación ha sufrido incidencias.",2026-08-28T19:25:00Z,95000,80`;
-      setRawText(csvStr);
-      processRawData(csvStr);
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A0C10]/85 p-4 backdrop-blur-sm">
       <div className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-sm border border-[#1E293B] bg-[#111827] shadow-2xl">
@@ -439,49 +400,11 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
         <div className="flex-1 space-y-4 overflow-y-auto p-6 text-xs text-[#E2E8F0]">
           {activeTab === 'upload_data' ? (
             <>
-              {/* ⚠️ MODO DEMO: ejemplos ilustrativos, NO evidencia real */}
-              <div className="rounded-sm border border-amber-500/50 bg-amber-950/20 p-3">
-                <div className="mb-1.5 flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-400" />
-                  <span className="text-[11px] font-bold text-amber-400">DATOS DE EJEMPLO (MODO DEMO) — NO SON EVIDENCIA REAL</span>
-                </div>
-                <p className="mb-2 text-[10px] text-amber-300/80 leading-relaxed">
-                  Estos botones cargan <strong>capturas ficticias diseñadas a mano</strong> solo para probar el motor de análisis.
-                  No provienen de redes reales y jamás deben tratarse como hallazgo forense. Para datos de campo usa el pipeta real
-                  (colectores CLI) con tus propios datasets.
-                </p>
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-1 text-slate-400">
-                    <FlaskConical className="h-3.5 w-3.5" />
-                    Cargar ejemplo de demostración:
-                  </label>
-                  <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-3">
-                    <button
-                      type="button"
-                      onClick={() => loadBenchmarkCapture('ceuta')}
-                      className="rounded-sm border border-amber-600/50 bg-[#0A0C10] px-2.5 py-1.5 text-left hover:bg-amber-950/30 text-amber-300 transition-colors"
-                    >
-                      <span className="font-bold text-[10px] block">Frontera Ceuta</span>
-                      <span className="font-mono text-[9px] opacity-80">JSON · ficticio</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => loadBenchmarkCapture('electoral')}
-                      className="rounded-sm border border-amber-600/50 bg-[#0A0C10] px-2.5 py-1.5 text-left hover:bg-amber-950/30 text-amber-300 transition-colors"
-                    >
-                      <span className="font-bold text-[10px] block">Integridad Electoral</span>
-                      <span className="font-mono text-[9px] opacity-80">JSON · ficticio</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => loadBenchmarkCapture('infra')}
-                      className="rounded-sm border border-amber-600/50 bg-[#0A0C10] px-2.5 py-1.5 text-left hover:bg-amber-950/30 text-amber-300 transition-colors"
-                    >
-                      <span className="font-bold text-[10px] block">Infraestructura</span>
-                      <span className="font-mono text-[9px] opacity-80">CSV · ficticio</span>
-                    </button>
-                  </div>
-                </div>
+              {/* La ingesta solo acepta datos reales del usuario (JSON/CSV o archivo).
+                  No hay datasets de ejemplo hardcoded. */}
+              <div className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-3 text-[11px] text-slate-400">
+                Pega datos JSON/CSV o sube un archivo de tu captura real del pipeline (colectores CLI).
+                No se cargan ejemplos ficticios.
               </div>
 
               {/* Upload Drop Zone / Input */}

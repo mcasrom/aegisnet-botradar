@@ -19,6 +19,7 @@ import { ForensicReportModal } from './components/ForensicReportModal';
 import { HowToGuideModal } from './components/HowToGuideModal';
 import { AboutModal } from './components/AboutModal';
 import { AboutView } from './components/AboutView';
+import { WelcomeModal } from './components/WelcomeModal';
 import { FunnelBanner } from './components/FunnelBanner';
 import { Footer } from './components/Footer';
 
@@ -219,6 +220,12 @@ export default function App() {
       <AboutModal
         isOpen={isAboutOpen}
         onClose={() => setIsAboutOpen(false)}
+      />
+
+      <WelcomeModal
+        isOpen={isWelcomeOpen}
+        onClose={() => setIsWelcomeOpen(false)}
+        onNavigate={setActiveTab}
       />
     </div>
   );
