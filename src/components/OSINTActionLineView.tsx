@@ -50,7 +50,7 @@ export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
   onOpenHowTo,
   health,
   isDemo,
-  version = '1.1.0'
+  version = '1.2.0'
 }) => {
   const [selectedPhase, setSelectedPhase] = useState<number>(1);
   const [copiedTakedown, setCopiedTakedown] = useState(false);

@@ -35,7 +35,7 @@ export default function App() {
   const [isDemo, setIsDemo] = useState<boolean>(true);
   const [dataSource, setDataSource] = useState<string>('backend no conectado');
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
-  const [appVersion, setAppVersion] = useState<string>('1.1.0');
+  const [appVersion, setAppVersion] = useState<string>('1.2.0');
   const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about'>('action');
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
@@ -44,7 +44,10 @@ export default function App() {
     (async () => {
       try {
         const health = await apiHealth();
-        if (health) setHealthInfo(health);
+        if (health) {
+          setHealthInfo(health);
+          if (health.version) setAppVersion(health.version);
+        }
         if (health && health.ok && health.existeEstado) {
           setIsDemo(false);
           setDataSource(`datos reales oasis.py (${health.fechaSenales})`);
