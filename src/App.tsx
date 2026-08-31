@@ -34,7 +34,7 @@ export default function App() {
   const [isDemo, setIsDemo] = useState<boolean>(true);
   const [dataSource, setDataSource] = useState<string>('backend no conectado');
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
-  const [appVersion, setAppVersion] = useState<string>('1.2.0');
+  const [appVersion, setAppVersion] = useState<string>('1.3.0');
   const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'action' | 'about'>('action');
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(true);
 

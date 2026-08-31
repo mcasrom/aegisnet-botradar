@@ -11,7 +11,7 @@ interface FooterProps {
   version?: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenHowTo, version = '1.2.0' }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenHowTo, version = '1.3.0' }) => {
   return (
     <footer className="border-t border-[#1E293B] bg-[#0A0C10] px-6 py-2.5 text-[11px] text-slate-500">
       <div className="mx-auto flex flex-wrap items-center justify-between gap-4">

@@ -51,7 +51,7 @@ export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
   onOpenHowTo,
   health,
   isDemo,
-  version = '1.2.0'
+  version = '1.3.0'
 }) => {
   const [selectedPhase, setSelectedPhase] = useState<number>(1);
   const [section, setSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
