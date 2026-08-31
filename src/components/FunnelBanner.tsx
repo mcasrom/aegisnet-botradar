@@ -45,6 +45,11 @@ export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTit
           y los documenta con cadena de custodia y matriz de confianza.
         </p>
 
+        {/* Estado del sistema (semáforo) — visible arriba, sin scroll */}
+        <div className="mt-4">
+          <SystemHealthPanel health={health ?? null} isDemo={isDemo ?? true} version={version} />
+        </div>
+
         {/* Funnel de 3 pasos: qué hace la página */}
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div className="rounded-lg border border-cyan-500/25 bg-[#0A0C10]/80 p-4">
@@ -81,11 +86,6 @@ export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTit
           <span className="flex items-center gap-1.5">
             <ArrowRight className="h-3.5 w-3.5 text-cyan-400" /> Casos en análisis y campañas monitorizadas
           </span>
-        </div>
-
-        {/* Estado del sistema */}
-        <div className="mt-4">
-          <SystemHealthPanel health={health ?? null} isDemo={isDemo ?? true} version={version} />
         </div>
       </div>
     </div>
