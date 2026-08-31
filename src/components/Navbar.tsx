@@ -17,7 +17,8 @@ import {
   Plus,
   BookOpen,
   FlaskConical,
-  ShieldCheck
+  ShieldCheck,
+  Radar
 } from 'lucide-react';
 import { InvestigationCampaign } from '../types/botradar';
 import { SystemHealthPanel } from './SystemHealthPanel';
@@ -37,8 +38,8 @@ interface NavbarProps {
   campaigns: InvestigationCampaign[];
   activeCampaign: InvestigationCampaign;
   onSelectCampaign: (campaign: InvestigationCampaign) => void;
-  activeTab: 'graph' | 'temporal' | 'nlp' | 'action' | 'about';
-  onChangeTab: (tab: 'graph' | 'temporal' | 'nlp' | 'action' | 'about') => void;
+  activeTab: 'graph' | 'temporal' | 'nlp' | 'action' | 'about' | 'senales';
+  onChangeTab: (tab: 'graph' | 'temporal' | 'nlp' | 'action' | 'about' | 'senales') => void;
   onOpenIngestion: () => void;
   onOpenArchitecture: () => void;
   onOpenReportModal: () => void;
@@ -287,6 +288,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="ml-0.5 rounded-full bg-cyan-500/20 px-1.5 py-0.2 text-[9px] font-mono font-black text-cyan-300 border border-cyan-500/40">
               PLAYBOOK
             </span>
+          </button>
+
+          {/* Tab: Log de Señales (pipeline OASIS) */}
+          <button
+            id="tab-senales"
+            onClick={() => onChangeTab('senales')}
+            className={`flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-xs font-bold transition-all ${
+              activeTab === 'senales'
+                ? 'bg-cyan-950/60 text-cyan-300 border border-cyan-500/50 shadow-sm ring-1 ring-cyan-500/30'
+                : 'text-cyan-400 hover:text-cyan-200 hover:bg-cyan-950/20'
+            }`}
+            title="Log searchable con timestamp de las señales detectadas por el pipeline OASIS"
+          >
+            <Radar className="h-3.5 w-3.5 text-cyan-400" />
+            <span>Log de Señales</span>
           </button>
 
           {/* Tab: Metodología & Fuentes */}

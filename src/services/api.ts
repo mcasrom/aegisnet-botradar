@@ -75,3 +75,52 @@ export async function fetchCampaignDetail(id: string): Promise<InvestigationCamp
   if (!r.ok) throw new Error(`Campaña no encontrada (${r.status})`);
   return (await r.json()) as InvestigationCampaign;
 }
+
+export interface Senal {
+  tipo?: string;
+  canal?: string;
+  red?: string;
+  titulo?: string;
+  url?: string;
+  fuente?: string;
+  entidad?: string;
+  nombre_entidad?: string;
+  entidad_region?: string;
+  señal_severa?: boolean;
+  envio_masivo?: boolean;
+  ts?: string;
+  archivo?: string;
+}
+
+export interface SenalesResponse {
+  totalDisponible: number;
+  count: number;
+  lista: Senal[];
+}
+
+export interface SenalesFiltro {
+  q?: string;
+  entidad?: string;
+  tipo?: string;
+  severa?: boolean;
+  masivo?: boolean;
+  fecha?: string;
+  desde?: string;
+  hasta?: string;
+}
+
+export async function fetchSenales(f: SenalesFiltro = {}): Promise<SenalesResponse> {
+  const p = new URLSearchParams();
+  if (f.q) p.set('q', f.q);
+  if (f.entidad) p.set('entidad', f.entidad);
+  if (f.tipo) p.set('tipo', f.tipo);
+  if (f.severa !== undefined) p.set('severa', String(f.severa));
+  if (f.masivo !== undefined) p.set('masivo', String(f.masivo));
+  if (f.fecha) p.set('fecha', f.fecha);
+  if (f.desde) p.set('desde', f.desde);
+  if (f.hasta) p.set('hasta', f.hasta);
+  const qs = p.toString();
+  const r = await fetch(`${API_BASE}/senales${qs ? `?${qs}` : ''}`, { cache: 'no-store' });
+  if (!r.ok) throw new Error(`Senales no disponibles (${r.status})`);
+  return (await r.json()) as SenalesResponse;
+}

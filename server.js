@@ -577,6 +577,50 @@ app.get('/api/raw/senales', (_req, res) => {
   res.json(d);
 });
 
+// --- Log de señales searchable (todos los archivos, con filtros/timestamp) ---
+app.get('/api/senales', (req, res) => {
+  const files = listSenalFiles();
+  const baseDate = req.query.fecha; // YYYY-MM-DD (archivo exacto)
+  const q = String(req.query.q || '').trim().toLowerCase();
+  const entidad = String(req.query.entidad || '');
+  const tipo = String(req.query.tipo || '');
+  const severa = req.query.severa; // 'true'|'false'
+  const masivo = req.query.masivo; // 'true'|'false'
+  const desde = req.query.desde;   // fecha ISO
+  const hasta = req.query.hasta;   // fecha ISO
+
+  const selected = baseDate
+    ? files.filter((f) => f.includes(baseDate))
+    : files;
+
+  const rows = [];
+  let nTotal = 0;
+  for (const f of selected) {
+    const d = readJson(join(DATOS_DIR, f));
+    if (!d?.hallazgos) continue;
+    nTotal += d.hallazgos.length;
+    for (const h of d.hallazgos) {
+      const ts = h.ts || '';
+      if (desde && ts && ts < desde) continue;
+      if (hasta && ts && ts > hasta) continue;
+      if (entidad && (h.entidad || '') !== entidad) continue;
+      if (tipo && (h.tipo || '') !== tipo) continue;
+      if (severa === 'true' && !h.señal_severa) continue;
+      if (severa === 'false' && h.señal_severa) continue;
+      if (masivo === 'true' && !h.envio_masivo) continue;
+      if (masivo === 'false' && h.envio_masivo) continue;
+      if (q) {
+        const hay = [h.titulo, h.canal, h.red, h.fuente, h.nombre_entidad, h.entidad_region]
+          .filter(Boolean).join(' ').toLowerCase().includes(q);
+        if (!hay) continue;
+      }
+      rows.push({ ...h, archivo: f });
+    }
+  }
+  rows.sort((a, b) => (a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0));
+  res.json({ totalDisponible: nTotal, count: rows.length, lista: rows });
+});
+
 // --- Frontend estático (si existe dist/) ---
 if (existsSync(join(DIST_DIR, 'index.html'))) {
   app.use(express.static(DIST_DIR));

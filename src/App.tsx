@@ -11,6 +11,7 @@ import { NetworkGraph } from './components/NetworkGraph';
 import { TemporalAnalysisView } from './components/TemporalAnalysisView';
 import { SemanticNLPView } from './components/SemanticNLPView';
 import { OSINTActionLineView } from './components/OSINTActionLineView';
+import { SenalesView } from './components/SenalesView';
 import { NodeInspectorModal } from './components/NodeInspectorModal';
 import { DataIngestionModal } from './components/DataIngestionModal';
 import { ArchitectureModal } from './components/ArchitectureModal';
@@ -35,7 +36,7 @@ export default function App() {
   const [dataSource, setDataSource] = useState<string>('backend no conectado');
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
   const [appVersion, setAppVersion] = useState<string>('1.3.0');
-  const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'action' | 'about'>('action');
+  const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'action' | 'about' | 'senales'>('action');
   const [actionSection, setActionSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(true);
 
@@ -183,6 +184,10 @@ export default function App() {
             section={actionSection}
             onSectionChange={setActionSection}
           />
+        )}
+
+        {activeTab === 'senales' && (
+          <SenalesView />
         )}
 
         {activeTab === 'about' && (
