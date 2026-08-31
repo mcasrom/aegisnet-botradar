@@ -124,3 +124,34 @@ export async function fetchSenales(f: SenalesFiltro = {}): Promise<SenalesRespon
   if (!r.ok) throw new Error(`Senales no disponibles (${r.status})`);
   return (await r.json()) as SenalesResponse;
 }
+/* ===== AUTH ===== */
+export interface AuthUser { authenticated: boolean; email?: string; role?: string; }
+export interface AuthResult { ok?: boolean; email?: string; role?: string; error?: string }
+
+async function postAuth(path: string, body: unknown): Promise<AuthResult> {
+  const r = await fetch(`${API_BASE}/auth/${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await r.json().catch(() => ({}));
+  return data as AuthResult;
+}
+
+export async function apiAuthMe(): Promise<AuthUser> {
+  try {
+    const r = await fetch(`${API_BASE}/auth/me`, { cache: 'no-store' });
+    if (r.ok) return (await r.json()) as AuthUser;
+  } catch { /* sin backend */ }
+  return { authenticated: false };
+}
+
+export async function apiLogin(email: string, password: string): Promise<AuthResult> {
+  return postAuth('login', { email, password });
+}
+export async function apiRegister(email: string, password: string): Promise<AuthResult> {
+  return postAuth('register', { email, password });
+}
+export async function apiLogout(): Promise<void> {
+  try { await fetch(`${API_BASE}/auth/logout`, { method: 'POST' }); } catch { /* ignore */ }
+}

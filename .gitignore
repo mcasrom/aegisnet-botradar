@@ -7,3 +7,11 @@ coverage/
 .env*
 !.env.example
 DATOS/
+
+# Seguridad: credenciales de acceso y datos restringidos
+.users.json
+*.json.bak_auth_*
+.privado_retirado/
+VIVO/
+users.json
+server.js.bak_auth_*

@@ -15,9 +15,11 @@
  *   GET /api/raw/:tipo       -> estado.json u oasis_senales_<fecha>.json
  */
 import express from 'express';
-import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
+import session from 'express-session';
+import bcrypt from 'bcryptjs';
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
-import { createHash } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
 
@@ -29,6 +31,90 @@ const DIST_DIR = process.env.DIST_DIR || join(process.cwd(), 'dist');
 
 const app = express();
 app.use(express.json({ limit: '20mb' }));
+
+/* ================= AUTH + ANTIFRAUDE =================
+   Registro email+password para cualquier persona, pero los DATOS DEL FRAUDE
+   (rutas /api/campaigns*) SOLO los ve el propietario autenticado (role owner).
+   Cualquier usuario registrado no-propietario recibe 403.
+   ----------------------------------------------------------------- */
+const USERS_FILE = process.env.USERS_FILE || join(process.cwd(), '.users.json');
+const SESSION_SECRET = process.env.SESSION_SECRET || randomBytes(32).toString('hex');
+const OWNER_EMAIL = (process.env.ADMIN_EMAIL || 'aegis.info@viajeinteligencia.com').toLowerCase();
+
+function loadUsers() {
+  try { return JSON.parse(readFileSync(USERS_FILE, 'utf-8')); }
+  catch { return {}; }
+}
+function saveUsers(users) {
+  mkdirSync(join(process.cwd()), { recursive: true });
+  writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+}
+app.use(session({
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, sameSite: 'lax', maxAge: 1000 * 60 * 60 * 12 }
+}));
+function isAuthenticated(req) { return !!(req.session && req.session.userId); }
+function isOwner(req) {
+  if (!isAuthenticated(req)) return false;
+  const u = loadUsers()[req.session.userId];
+  return !!(u && u.role === 'owner' && u.email === OWNER_EMAIL);
+}
+function requireOwner(req, res, next) {
+  if (!isAuthenticated(req)) return res.status(401).json({ error: 'sesion_requerida' });
+  if (!isOwner(req)) return res.status(403).json({ error: 'acceso_rest_owner' });
+  next();
+}
+
+// --- POST /api/auth/register : cualquier persona puede crear cuenta ---
+app.post('/api/auth/register', (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string')
+    return res.status(400).json({ error: 'email_y_password_requeridos' });
+  const e = email.trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e))
+    return res.status(400).json({ error: 'email_invalido' });
+  if (password.length < 8)
+    return res.status(400).json({ error: 'password_min_8' });
+  const users = loadUsers();
+  if (users[e]) return res.status(409).json({ error: 'email_ya_registrado' });
+  const role = e === OWNER_EMAIL ? 'owner' : 'user';
+  users[e] = { email: e, passwordHash: bcrypt.hashSync(password, 10), role, createdAt: new Date().toISOString() };
+  saveUsers(users);
+  req.session.userId = e;
+  return res.json({ ok: true, email: e, role });
+});
+
+// --- POST /api/auth/login ---
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body || {};
+  const e = (email || '').trim().toLowerCase();
+  const users = loadUsers();
+  const u = users[e];
+  if (!u || !bcrypt.compareSync(password || '', u.passwordHash))
+    return res.status(401).json({ error: 'credenciales_invalidas' });
+  req.session.userId = e;
+  return res.json({ ok: true, email: e, role: u.role });
+});
+
+// --- POST /api/auth/logout ---
+app.post('/api/auth/logout', (req, res) => {
+  req.session.destroy(() => res.json({ ok: true }));
+});
+
+// --- GET /api/auth/me : perfil de la sesion actual ---
+app.get('/api/auth/me', (req, res) => {
+  if (!isAuthenticated(req)) return res.json({ authenticated: false });
+  const u = loadUsers()[req.session.userId];
+  return res.json({ authenticated: true, email: u?.email, role: u?.role });
+});
+
+// --- GET /api/auth/status : que esta publico vs restringido ---
+app.get('/api/auth/status', (_req, res) => {
+  return res.json({ registro: 'abierto', owner: OWNER_EMAIL, fraude: 'restringido_a_owner' });
+});
+
 
 /** Lee JSON con fallback vacío */
 function readJson(file) {
@@ -507,7 +593,7 @@ function computeCibFromCampaign(nodes, edges) {
 }
 
 /** Última fecha de señales para cargar en /api/campaigns */
-app.get('/api/campaigns', (_req, res) => {
+app.get('/api/campaigns', requireOwner, (_req, res) => {
   const estado = readJson(join(DATOS_DIR, 'estado.json'));
   const senalFile = latestSenaFile();
   const senales = senalFile ? readJson(join(DATOS_DIR, senalFile)) : null;
@@ -544,7 +630,7 @@ app.get('/api/campaigns', (_req, res) => {
   res.json({ generatedAt: senales?.generado_utc || new Date().toISOString(), count: campaigns.length, campaigns, nDocumented: documented.length, nPipeline: base.length });
 });
 
-app.get('/api/campaigns/:id', (req, res) => {
+app.get('/api/campaigns/:id', requireOwner, (req, res) => {
   const estado = readJson(join(DATOS_DIR, 'estado.json'));
   const senalFile = latestSenaFile();
   const senales = senalFile ? readJson(join(DATOS_DIR, senalFile)) : null;
@@ -625,6 +711,7 @@ app.get('/api/senales', (req, res) => {
 if (existsSync(join(DIST_DIR, 'index.html'))) {
   app.use(express.static(DIST_DIR));
   app.get(/^\/(?!api\/).*/, (_req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.sendFile(join(DIST_DIR, 'index.html'));
   });
   console.log(`[aegisnet] sirviendo frontend estático desde ${DIST_DIR}`);

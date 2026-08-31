@@ -26,7 +26,8 @@ import { Footer } from './components/Footer';
 import { DEMO_CAMPAIGNS } from './data/campaigns';
 import { InvestigationCampaign, SocialAccountNode, NetworkEdge } from './types/botradar';
 import { computeComprehensiveCIBScore } from './services/cibEngine';
-import { fetchCampaigns, fetchCampaignDetail, apiHealth, HealthResponse } from './services/api';
+import { fetchCampaigns, fetchCampaignDetail, apiHealth, apiAuthMe, apiLogout, HealthResponse } from './services/api';
+import LoginScreen from './components/LoginScreen';
 
 
 export default function App() {
@@ -39,6 +40,17 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'action' | 'about' | 'senales'>('action');
   const [actionSection, setActionSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(true);
+  const [authUser, setAuthUser] = useState<{ email: string; role: string } | null>(null);
+  const [authChecked, setAuthChecked] = useState<boolean>(false);
+
+  // Comprobar sesion al montar
+  React.useEffect(() => {
+    (async () => {
+      const me = await apiAuthMe();
+      if (me.authenticated && me.email) setAuthUser({ email: me.email, role: me.role || 'user' });
+      setAuthChecked(true);
+    })();
+  }, []);
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
   React.useEffect(() => {
@@ -119,6 +131,10 @@ export default function App() {
     setActiveCampaign(newCampaign);
     setIsIngestionOpen(false);
   };
+
+  if (authChecked && !authUser) {
+    return <LoginScreen onAuthed={(email, role) => setAuthUser({ email, role })} />;
+  }
 
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#0A0C10] text-[#E2E8F0] font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200">
