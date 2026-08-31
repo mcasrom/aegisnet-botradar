@@ -132,6 +132,9 @@ export default function App() {
         onOpenReportModal={() => setIsReportModalOpen(true)}
         onOpenHowTo={() => setIsHowToOpen(true)}
         onOpenAbout={() => setIsAboutOpen(true)}
+        health={healthInfo}
+        isDemo={isDemo}
+        version={appVersion}
       />
 
       {/* Funnel global: qué gestiona la página (visible en todas las tabs) */}

@@ -20,6 +20,8 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { InvestigationCampaign } from '../types/botradar';
+import { SystemHealthPanel } from './SystemHealthPanel';
+import { HealthResponse } from '../services/api';
 
 /**
  * Clasifica el origen del dataset de una campaña según su investigationCode.
@@ -42,6 +44,9 @@ interface NavbarProps {
   onOpenReportModal: () => void;
   onOpenHowTo: () => void;
   onOpenAbout: () => void;
+  health?: HealthResponse | null;
+  isDemo?: boolean;
+  version?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -54,7 +59,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenArchitecture,
   onOpenReportModal,
   onOpenHowTo,
-  onOpenAbout
+  onOpenAbout,
+  health,
+  isDemo,
+  version = '1.3.0'
 }) => {
   const cib = activeCampaign.cibBreakdown;
 
@@ -151,6 +159,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden items-center gap-1 text-[11px] text-slate-500 lg:flex">
             <span>SHA-256:</span>
             <span className="font-mono text-slate-400">{activeCampaign.datasetSha256.slice(0, 10)}...</span>
+          </div>
+
+          {/* Semáforo de salud del sistema (siempre visible arriba) */}
+          <div className="w-full sm:w-auto">
+            <SystemHealthPanel health={health ?? null} isDemo={isDemo ?? true} version={version} />
           </div>
         </div>
       </div>

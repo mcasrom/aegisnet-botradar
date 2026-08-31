@@ -30,7 +30,8 @@ import {
   BookOpen,
   ListChecks,
   ClipboardList,
-  FileSearch
+  FileSearch,
+  HelpCircle
 } from 'lucide-react';
 import { InvestigationCampaign, SocialAccountNode } from '../types/botradar';
 import { HealthResponse } from '../services/api';
@@ -289,7 +290,7 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
 
       {/* SECCIÓN: HALLAZGOS DEL CASO (detalles reales del caso documentado) */}
       {section === 'hallazgos' && (
-        <div className="mb-6 space-y-3">
+        <div className="mb-6 space-y-5">
           <div className="flex items-center gap-2">
             <FileSearch className="h-4 w-4 text-cyan-400" />
             <h3 className="text-sm font-bold tracking-tight text-white">
@@ -301,56 +302,116 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
           </div>
 
           {Array.isArray(campaign.hallazgos) && campaign.hallazgos.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 gap-2.5 xl:grid-cols-2">
-                {campaign.hallazgos.map((h, i) => {
-                  const ver =
-                    h.nivel_verificacion === 'HECHO'
-                      ? { label: 'HECHO', cls: 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300' }
-                      : h.nivel_verificacion === 'HIPOTESIS'
-                      ? { label: 'HIPÓTESIS', cls: 'border-amber-500/40 bg-amber-950/40 text-amber-300' }
-                      : { label: 'PREGUNTA', cls: 'border-rose-500/40 bg-rose-950/40 text-rose-300' };
-                  return (
-                    <div key={i} className="rounded-sm border border-[#1E293B] bg-[#111827] p-3.5">
-                      <div className="flex flex-wrap items-start justify-between gap-2">
-                        <span className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold ${ver.cls}`}>
-                          {ver.label}
-                        </span>
-                        {h.fecha_evento && (
-                          <span className="font-mono text-[10px] text-slate-500">{h.fecha_evento}</span>
-                        )}
+            (() => {
+              const all = campaign.hallazgos as Array<{ nivel_verificacion?: string; fecha_evento?: string } & Record<string, any>>;
+              const hechos = all.filter((h) => h.nivel_verificacion === 'HECHO');
+              const hipotesis = all.filter((h) => h.nivel_verificacion === 'HIPOTESIS');
+              const preguntas = all.filter((h) => h.nivel_verificacion !== 'HECHO' && h.nivel_verificacion !== 'HIPOTESIS');
+
+              const card = (h: any, badge: { label: string; cls: string }, i: number) => (
+                <div key={i} className={`rounded-sm border p-3.5 ${badge.cls.includes('emerald') ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-[#1E293B] bg-[#111827]'}`}>
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <span className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold ${badge.cls}`}>
+                      {badge.label}
+                    </span>
+                    {h.fecha_evento && (
+                      <span className="font-mono text-[10px] text-slate-500">{h.fecha_evento}</span>
+                    )}
+                  </div>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-200">{h.titulo}</p>
+                  <div className="mt-2 space-y-1 text-[10px] text-slate-400">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-slate-500">Fuente:</span>
+                      <span className="text-cyan-300/90">{h.fuente || '—'}</span>
+                      {h.url && (
+                        <a
+                          href={h.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-0.5 text-cyan-400 hover:text-cyan-200"
+                        >
+                          <ExternalLink className="h-3 w-3" /> verificar
+                        </a>
+                      )}
+                    </div>
+                    {h.canal && (
+                      <div>
+                        <span className="text-slate-500">Canal/verificador: </span>
+                        <span className="font-mono text-slate-300">@{h.canal}</span>
                       </div>
-                      <p className="mt-2 text-xs leading-relaxed text-slate-200">{h.titulo}</p>
-                      <div className="mt-2 space-y-1 text-[10px] text-slate-400">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="text-slate-500">Fuente:</span>
-                          <span className="text-cyan-300/90">{h.fuente || '—'}</span>
-                          {h.url && (
-                            <a
-                              href={h.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-0.5 text-cyan-400 hover:text-cyan-200"
-                            >
-                              <ExternalLink className="h-3 w-3" /> verificar
-                            </a>
-                          )}
-                        </div>
-                        {h.canal && (
-                          <div>
-                            <span className="text-slate-500">Canal/verificador: </span>
-                            <span className="font-mono text-slate-300">@{h.canal}</span>
-                          </div>
+                    )}
+                  </div>
+                </div>
+              );
+
+              return (
+                <>
+                  {/* BLOQUE 1: HECHOS verificados (con protagonismo arriba) */}
+                  {hechos.length > 0 && (
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                        <h4 className="text-xs font-black uppercase tracking-wider text-emerald-300">
+                          HECHOS verificados
+                        </h4>
+                        <span className="rounded-sm border border-emerald-500/30 bg-emerald-950/40 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
+                          {hechos.length}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2.5 xl:grid-cols-2">
+                        {hechos.map((h, i) =>
+                          card(h, { label: 'HECHO', cls: 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300' }, i)
                         )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-              <p className="text-[10px] text-slate-500">
-                Hallazgos reconstruidos desde documentación pública de verificadores (ej. Mal​dita, Newtral, EFE). El nivel de verificación refleja el estado documental de cada afirmación.
-              </p>
-            </>
+                  )}
+
+                  {/* BLOQUE 2: HIPÓTESIS con peso */}
+                  {hipotesis.length > 0 && (
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-400" />
+                        <h4 className="text-xs font-black uppercase tracking-wider text-amber-300">
+                          Hipótesis con peso
+                        </h4>
+                        <span className="rounded-sm border border-amber-500/30 bg-amber-950/40 px-2 py-0.5 font-mono text-[10px] text-amber-300">
+                          {hipotesis.length}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2.5 xl:grid-cols-2">
+                        {hipotesis.map((h, i) =>
+                          card(h, { label: 'HIPÓTESIS', cls: 'border-amber-500/40 bg-amber-950/40 text-amber-300' }, i)
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* BLOQUE 3: PREGUNTAS ABIERTAS / no resueltas */}
+                  {preguntas.length > 0 && (
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <HelpCircle className="h-4 w-4 text-rose-400" />
+                        <h4 className="text-xs font-black uppercase tracking-wider text-rose-300">
+                          Preguntas abiertas / no verificadas
+                        </h4>
+                        <span className="rounded-sm border border-rose-500/30 bg-rose-950/40 px-2 py-0.5 font-mono text-[10px] text-rose-300">
+                          {preguntas.length}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2.5 xl:grid-cols-2">
+                        {preguntas.map((h, i) =>
+                          card(h, { label: 'PREGUNTA', cls: 'border-rose-500/40 bg-rose-950/40 text-rose-300' }, i)
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <p className="text-[10px] text-slate-500">
+                    Hallazgos reconstruidos desde documentación pública de verificadores (ej. Mal​dita, Newtral, EFE). El nivel de verificación refleja el estado documental de cada afirmación. Los HECHOS están documentados por fuentes verificadoras; las PREGUNTAS e HIPÓTESIS son líneas abiertas, no conclusiones.
+                  </p>
+                </>
+              );
+            })()
           ) : (
             <div className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-4 text-xs text-slate-400">
               Este caso no expone hallazgos individuales en la vista. Revisa el Informe Técnico (PDF) o el expediente.
