@@ -274,7 +274,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   <span>Matriz de Confianza y Certeza Metodológica por Dimensión Analítica</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">
-                  7 Dimensiones Auditadas
+                  {matrix.length} Dimensiones Auditadas
                 </span>
               </div>
 
@@ -326,7 +326,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   <span>Fórmula Matemática CIB &amp; Benchmark del Clasificador</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">
-                  P(inauténtico) ≈ {((campaign.cibBreakdown?.overallScore ?? 0) / 100).toFixed(2)}
+                  Índice CIB: {campaign.cibBreakdown?.overallScore ?? 0}/100
                 </span>
               </div>
 
@@ -334,7 +334,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                 CIB = (0.30 * S_topologico) + (0.30 * S_temporal) + (0.25 * S_semantico) + (0.15 * S_metadatos)
               </div>
 
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-5 text-center">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 text-center">
                 <div className="rounded-sm border border-[#1E293B] bg-[#0A0C10] p-2">
                   <span className="block text-[9px] font-mono text-slate-400">Precisión</span>
                   <span className="font-mono text-base font-bold text-white">{(benchmark.precision * 100).toFixed(1)}%</span>
@@ -351,10 +351,6 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   <span className="block text-[9px] font-mono text-slate-400">Umbral Corte</span>
                   <span className="font-mono text-base font-bold text-white">&gt;= {benchmark.decisionThreshold.toFixed(2)}</span>
                 </div>
-                <div className="rounded-sm border border-[#1E293B] bg-[#0A0C10] p-2">
-                  <span className="block text-[9px] font-mono text-slate-400">Falsos Positivos</span>
-                  <span className="font-mono text-base font-bold text-emerald-400">3.8% (Est.)</span>
-                </div>
               </div>
             </div>
           )}
@@ -368,7 +364,7 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   <span>Cadena de Custodia Criptográfica (Chain of Custody)</span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">
-                  5 Fases Inmutables Selladas
+                  {custody.length} Fases Inmutables Selladas
                 </span>
               </div>
 
@@ -406,7 +402,9 @@ export const ForensicReportModal: React.FC<ForensicReportModalProps> = ({
                   <span>Peritaje Audiovisual: Cotejo Perceptual pHash y EXIF Stripping</span>
                 </div>
                 <span className="rounded-sm border border-rose-500/40 bg-rose-950/30 px-2 py-0.5 font-mono text-[10px] font-bold text-rose-300">
-                  RECICLAJE HISTÓRICO VERIFICADO
+                  {campaign.exifForensics.some((e) => e.verdict && /recicl|re-enmarc|reapertura|historico/i.test(e.verdict))
+                    ? 'RECICLAJE HISTÓRICO VERIFICADO'
+                    : 'PERITAJE AUDIOVISUAL'}
                 </span>
               </div>
               {campaign.exifForensics.map((exif) => (

@@ -20,7 +20,7 @@ export async function calculateSha256(content: string): Promise<string> {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
   } catch {
-    return '7f91a4b82c03ef1804d9a5441e86a0129bc61023d8c11578e9bf9b5d40a23e19';
+    return 'UNSEALABLE_CRYPTO_UNAVAILABLE';
   }
 }
 
@@ -356,19 +356,42 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   y += 26;
 
   // Desglose de puntuaciones en 5 tarjetas
-  const cib = campaign.cibBreakdown;
+  const cib = campaign.cibBreakdown || { overallScore: 0, topologicalScore: 0, temporalScore: 0, semanticScore: 0, metadataScore: 0, riskLevel: 'LOW_ORGANIC' as const };
+  const riskLabel =
+    cib.riskLevel === 'CONFIRMED_CIB'
+      ? 'Coordinación señalada'
+      : cib.riskLevel === 'SUSPICIOUS'
+      ? 'Sospechoso'
+      : 'Orgánico';
+  const roleLabel = (() => {
+    const coord = campaign.nodes.filter((n) => n.type === 'coordinator').length;
+    const bot = campaign.nodes.filter((n) => n.type === 'bot').length;
+    if (coord || bot) return `${coord} coord. / ${bot} aut.`; 
+    return 'Sin cluster';
+  })();
+  const jitterAvg = (() => {
+    const vals = campaign.nodes.map((n) => n.temporalMetrics?.intervalJitterSeconds).filter((v) => v && v > 0);
+    if (!vals.length) return 'Sin datos';
+    return `${(vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2)}s`;
+  })();
+  const jaccardAvg = (() => {
+    const cl = campaign.astroturfClusters || [];
+    if (!cl.length) return 'Sin datos';
+    return cl.reduce((a, c) => a + (c.averageSimilarity || 0), 0) / cl.length;
+  })();
   const scoreColW = (pageWidth - 28) / 5;
   const scoreCards = [
-    { label: 'CIB GLOBAL', val: `${cib.overallScore}/100`, note: 'Crítico / Severo', color: [220, 38, 38] },
-    { label: 'S_topologico', val: `${cib.topologicalScore}/100`, note: 'Hub-and-Spoke', color: [30, 41, 59] },
-    { label: 'S_temporal', val: `${cib.temporalScore}/100`, note: 'Jitter < 0.35s', color: [30, 41, 59] },
-    { label: 'S_semantico', val: `${cib.semanticScore}/100`, note: 'Jaccard 0.98', color: [30, 41, 59] },
+    { label: 'CIB GLOBAL', val: `${cib.overallScore}/100`, note: riskLabel, color: [220, 38, 38] },
+    { label: 'S_topologico', val: `${cib.topologicalScore}/100`, note: roleLabel, color: [30, 41, 59] },
+    { label: 'S_temporal', val: `${cib.temporalScore}/100`, note: `Jitter ${jitterAvg}`, color: [30, 41, 59] },
+    { label: 'S_semantico', val: `${cib.semanticScore}/100`, note: typeof jaccardAvg === 'number' ? `Jaccard ${jaccardAvg.toFixed(2)}` : jaccardAvg, color: [30, 41, 59] },
     { label: 'S_metadatos', val: `${cib.metadataScore}/100`, note: 'Anomalías en cuenta', color: [30, 41, 59] }
   ];
 
   scoreCards.forEach((card, idx) => {
     const boxX = 14 + idx * scoreColW;
-    doc.setFillColor(idx === 0 ? 254 : 248, idx === 0 ? 242 : 250, idx === 0 ? 242 : 252);
+    const isLow = card.label === 'CIB GLOBAL' && cib.overallScore < 35;
+    doc.setFillColor(isLow ? 236 : idx === 0 ? 254 : 248, isLow ? 253 : idx === 0 ? 242 : 250, isLow ? 245 : idx === 0 ? 242 : 252);
     doc.rect(boxX, y, scoreColW - 2, 16, 'F');
     doc.setDrawColor(203, 213, 225);
     doc.rect(boxX, y, scoreColW - 2, 16, 'S');
@@ -398,22 +421,7 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
 
   y += 4.5;
 
-  const bench = campaign.classifierBenchmark || {
-    modelName: 'AegisNet-CIB-v1.2 (Ensemble Random Forest + Graph Neural Network)',
-    trainingDataset: 'Twitter-CIB-2024-Open + Telegram-Disinfo-Benchmark (N=45.000 nodos verificados)',
-    precision: 0.92,
-    recall: 0.89,
-    f1Score: 0.904,
-    decisionThreshold: 0.78,
-    featuresUsed: [
-      'interval_jitter_seconds (peso: 0.28)',
-      'exact_copypaste_ratio (peso: 0.22)',
-      'betweenness_centrality (peso: 0.18)',
-      'follower_following_ratio (peso: 0.12)',
-      'night_activity_ratio (peso: 0.10)',
-      'ja3_tls_script_fingerprint (peso: 0.10)'
-    ]
-  };
+  const bench = campaign.classifierBenchmark;
 
   doc.setFillColor(248, 250, 252);
   doc.rect(14, y, pageWidth - 28, 48, 'F');
@@ -423,35 +431,44 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   doc.setFontSize(7.2);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(30, 41, 59);
-  doc.text(`Arquitectura del Modelo: ${bench.modelName}`, 18, y + 5);
 
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6.8);
-  doc.setTextColor(71, 85, 105);
-  doc.text(`Dataset de Validación Cruzada: ${bench.trainingDataset}`, 18, y + 9.5);
+  if (!bench) {
+    doc.text('Benchmark del clasificador: NO DISPONIBLE (no se declaran métricas no verificadas)', 18, y + 5);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(6.8);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Este informe NO incluye precisión, recall ni F1 del clasificador porque no existe', 18, y + 9.5);
+    doc.text('un benchmark calibrado registrado para esta campaña. Ningún valor se inventa.', 18, y + 12.5);
+    y += 48;
+  } else {
+    doc.text(`Arquitectura del Modelo: ${bench.modelName}`, 18, y + 5);
 
-  // Tabla de métricas de benchmark
-  const mY = y + 13;
-  const mWidth = (pageWidth - 36) / 5;
-  const bMetrics = [
-    { name: 'Precisión', val: `${(bench.precision * 100).toFixed(1)}%` },
-    { name: 'Recall', val: `${(bench.recall * 100).toFixed(1)}%` },
-    { name: 'F1-Score', val: bench.f1Score.toFixed(3) },
-    { name: 'Umbral Decisión', val: `>= ${bench.decisionThreshold.toFixed(2)}` },
-    { name: 'Falsos Positivos', val: '3.8% (Est.)' }
-  ];
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(6.8);
+    doc.setTextColor(71, 85, 105);
+    doc.text(`Dataset de Validación Cruzada: ${bench.trainingDataset}`, 18, y + 9.5);
 
-  bMetrics.forEach((m, idx) => {
-    const bX = 18 + idx * mWidth;
-    doc.setFillColor(255, 255, 255);
-    doc.rect(bX, mY, mWidth - 2, 11, 'F');
-    doc.setDrawColor(203, 213, 225);
-    doc.rect(bX, mY, mWidth - 2, 11, 'S');
+    // Tabla de métricas de benchmark
+    const mY = y + 13;
+    const mWidth = (pageWidth - 36) / 4;
+    const bMetrics = [
+      { name: 'Precisión', val: `${(bench.precision * 100).toFixed(1)}%` },
+      { name: 'Recall', val: `${(bench.recall * 100).toFixed(1)}%` },
+      { name: 'F1-Score', val: bench.f1Score.toFixed(3) },
+      { name: 'Umbral Decisión', val: `>= ${bench.decisionThreshold.toFixed(2)}` }
+    ];
 
-    doc.setFontSize(6);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(100, 116, 139);
-    doc.text(m.name, bX + 2, mY + 4);
+    bMetrics.forEach((m, idx) => {
+      const bX = 18 + idx * mWidth;
+      doc.setFillColor(255, 255, 255);
+      doc.rect(bX, mY, mWidth - 2, 11, 'F');
+      doc.setDrawColor(203, 213, 225);
+      doc.rect(bX, mY, mWidth - 2, 11, 'S');
+
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(100, 116, 139);
+      doc.text(m.name, bX + 2, mY + 4);
 
     doc.setFontSize(8.5);
     doc.setTextColor(15, 23, 42);
@@ -477,6 +494,7 @@ export function generateForensicPDF(campaign: InvestigationCampaign) {
   );
 
   y += 54;
+  }
 
   // Cadena de Custodia Criptográfica (Chain of Custody)
   doc.setTextColor(15, 23, 42);
@@ -1142,7 +1160,6 @@ export function exportDISARMJson(campaign: InvestigationCampaign) {
       dataset_sha256: campaign.datasetSha256,
       overall_cib_score: campaign.cibBreakdown.overallScore,
       risk_level: campaign.cibBreakdown.riskLevel,
-      neutrality_certified: true,
       legal_disclaimer:
         'OSINT preliminary report. Attribution to physical persons or nation-states requires judicial discovery or SIGINT.'
     },

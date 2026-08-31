@@ -154,23 +154,23 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
             cibScore: 40,
             creationDate: new Date(Date.now() - 30 * 86400000).toISOString(),
             accountAgeDays: 30,
-            followersCount: rec.followers || 12,
-            followingCount: rec.following || 1840,
-            followerFollowingRatio: (rec.followers || 12) / Math.max(1, rec.following || 1840),
-            totalPosts: 150,
-            postsPerDay: 5,
+            followersCount: rec.followers || 0,
+            followingCount: rec.following || 0,
+            followerFollowingRatio: rec.followers && rec.following ? rec.followers / Math.max(1, rec.following) : 0,
+            totalPosts: rec.text ? 1 : 0,
+            postsPerDay: 0,
             louvainCommunity: 1,
             centrality: { degree: 1, betweenness: 0.01, pageRank: 0.05, clusteringCoefficient: 0.0 },
             temporalMetrics: {
-              medianIntervalSeconds: 30,
-              intervalJitterSeconds: 1.2,
+              medianIntervalSeconds: 0,
+              intervalJitterSeconds: 0,
               burstCount: 0,
-              nightActivityRatio: 0.3
+              nightActivityRatio: 0
             },
             contentMetrics: {
               exactCopyPasteRatio: 0.0,
               sentimentPolarizationIndex: 0.7,
-              topHashTags: text.match(/#[a-zA-Z0-9_]+/g) || ['#OSINT_Dataset'],
+              topHashTags: text.match(/#[a-zA-Z0-9_]+/g) || [],
               samplePosts: [
                 {
                   id: `post_${idx}`,
@@ -182,12 +182,11 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
               ]
             },
             geoOrigin: {
-              country: 'Captura OSINT',
-              city: 'IP Residencial / Egress',
-              asn: 'AS-IMPORT',
+              country: 'Sin geolocalizar',
+              city: 'Sin geolocalizar',
               isVpnOrProxy: false,
-              lat: 40.4168,
-              lng: -3.7038
+              lat: 0,
+              lng: 0
             }
           });
         } else {
@@ -286,26 +285,15 @@ export const DataIngestionModal: React.FC<DataIngestionModalProps> = ({
             accountIds: parsedNodes.slice(0, 5).map((n) => n.id),
             firstSeen: new Date(timestampEvents[0]?.time || Date.now()).toISOString(),
             lastSeen: new Date(timestampEvents[timestampEvents.length - 1]?.time || Date.now()).toISOString(),
-            timeSpanMinutes: Number(((timestampEvents[timestampEvents.length - 1]?.time - timestampEvents[0]?.time) / 60000).toFixed(2)) || 1.2,
-            averageSimilarity: duplicateCount > 0 ? 0.92 : 0.4,
+            timeSpanMinutes: timestampEvents.length > 1
+              ? Number(((timestampEvents[timestampEvents.length - 1]?.time - timestampEvents[0]?.time) / 60000).toFixed(2))
+              : 0,
+            averageSimilarity: 0,
             targetNarrative: 'Propagación de mensaje matriz identificado en el dataset',
             isDescontextualizedMedia: false
           }
         ],
-        geopoliticalVectors: [
-          {
-            id: `geo_imp_1`,
-            originCountry: 'Infraestructura del Dataset Ingestado',
-            originCoords: [40.4168, -3.7038],
-            targetRegion: 'España / Ámbito Hispano',
-            targetCoords: [40.4168, -3.7038],
-            primaryLanguage: 'Español',
-            targetElectoralProcessOrTopic: 'Dataset pericial de fuentes abiertas',
-            estimatedReach: rawRecords.length * 420,
-            activeBotNodes: parsedNodes.filter((n) => n.cibScore >= 75).length,
-            infrastructureNotes: 'Procesamiento directo en navegador mediante algoritmos Jaccard y detección Louvain.'
-          }
-        ]
+        geopoliticalVectors: []
       };
 
       setParsingStatus({

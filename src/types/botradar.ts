@@ -156,6 +156,20 @@ export interface ChainOfCustodyStep {
   actionDescription: string;
 }
 
+export interface CasoHallazgo {
+  tipo: string;
+  canal: string;
+  titulo: string;
+  url?: string;
+  fuente: string;
+  entidad: string;
+  nivel_verificacion: 'HECHO' | 'HIPOTESIS' | 'PREGUNTA';
+  fecha_evento?: string;
+  ts?: string;
+  señal_severa?: boolean;
+  envio_masivo?: boolean;
+}
+
 export interface InvestigationCampaign {
   id: string;
   title: string;
@@ -180,6 +194,7 @@ export interface InvestigationCampaign {
   classifierBenchmark?: ClassifierBenchmark;
   chainOfCustody?: ChainOfCustodyStep[];
   burstEvents?: BurstEventRecord[];
+  hallazgos?: CasoHallazgo[];
 }
 
 export interface AccountMutationAudit {

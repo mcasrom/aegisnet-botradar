@@ -24,12 +24,13 @@ import {
   ChevronRight,
   Info,
   Terminal,
-  Radio,
-  Layers,
   Check,
   Building,
   UserCheck,
-  BookOpen
+  BookOpen,
+  ListChecks,
+  ClipboardList,
+  FileSearch
 } from 'lucide-react';
 import { InvestigationCampaign, SocialAccountNode } from '../types/botradar';
 import { HealthResponse } from '../services/api';
@@ -53,6 +54,7 @@ export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
   version = '1.2.0'
 }) => {
   const [selectedPhase, setSelectedPhase] = useState<number>(1);
+  const [section, setSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
   const [copiedTakedown, setCopiedTakedown] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({
     sha256_verified: true,
@@ -72,7 +74,7 @@ export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
   const cib = campaign.cibBreakdown;
   const botNodes = campaign.nodes.filter((n) => n.type === 'bot' || n.cibScore >= 80);
   const zombieNodes = campaign.nodes.filter((n) => n.zombieAudit?.isZombieAccount);
-  const burstCount = campaign.burstEvents?.length || 28;
+  const burstCount = campaign.burstEvents?.length ?? 0;
 
   // Generate Takedown Report Text for Trust & Safety teams
   const generateTakedownPayload = () => {
@@ -242,69 +244,189 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
         </div>
         <div>
           <span className="block text-[10px] font-mono uppercase text-slate-400">Índice CIB Ponderado</span>
-          <span className="font-mono font-bold text-rose-400">{cib.overallScore}/100 (CRÍTICO)</span>
+          <span className="font-mono font-bold text-rose-400">{cib.overallScore}/100</span>
         </div>
         <div>
-          <span className="block text-[10px] font-mono uppercase text-slate-400">Sincronía Temporal</span>
-          <span className="font-mono font-bold text-slate-200">{burstCount} eventos</span>
+          <span className="block text-[10px] font-mono uppercase text-slate-400">Hallazgos registrados</span>
+          <span className="font-mono font-bold text-slate-200">{campaign.hallazgos?.length ?? campaign.totalCollectedEvents ?? 0}</span>
         </div>
         <div>
-          <span className="block text-[10px] font-mono uppercase text-slate-400">Cotejo de Contenido</span>
-          <span className="font-mono font-bold text-amber-400">Según evidencia</span>
+          <span className="block text-[10px] font-mono uppercase text-slate-400">Nodos / Señales</span>
+          <span className="font-mono font-bold text-amber-400">{campaign.nodes.length} nodos</span>
         </div>
       </div>
 
-      {/* Matriz de Confianza (nivel de verificación y limitaciones) */}
-      {Array.isArray(campaign.confidenceMatrix) && campaign.confidenceMatrix.length > 0 && (
-        <div className="mb-5 rounded-sm border border-cyan-500/30 bg-[#0A0F1E] p-4">
-          <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-sm border border-cyan-500/40 bg-cyan-950/40 text-cyan-400">
-              <Info className="h-3.5 w-3.5" />
+      {/* Sección interna: Hallazgos / Expediente / Protocolo */}
+      <div className="mb-5 flex flex-wrap items-center gap-2 border-b border-[#1E293B] pb-2">
+        {([
+          { id: 'hallazgos' as const, label: 'Hallazgos del caso', icon: FileSearch, dot: campaign.hallazgos?.length },
+          { id: 'expediente' as const, label: 'Expediente', icon: ClipboardList, dot: undefined },
+          { id: 'protocolo' as const, label: 'Protocolo de respuesta', icon: ListChecks, dot: undefined }
+        ]).map((t) => {
+          const Icon = t.icon;
+          const active = section === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setSection(t.id)}
+              className={`flex items-center gap-2 rounded-sm border px-3 py-2 text-xs font-semibold transition-all ${
+                active
+                  ? 'border-cyan-500/60 bg-cyan-950/40 text-cyan-300 shadow-sm'
+                  : 'border-[#1E293B] bg-[#111827] text-slate-400 hover:border-slate-700 hover:text-slate-200'
+              }`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{t.label}</span>
+              {t.dot != null && (
+                <span className="rounded-full bg-cyan-500/20 px-1.5 py-0.5 font-mono text-[10px] text-cyan-300">
+                  {t.dot}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* SECCIÓN: HALLAZGOS DEL CASO (detalles reales del caso documentado) */}
+      {section === 'hallazgos' && (
+        <div className="mb-6 space-y-3">
+          <div className="flex items-center gap-2">
+            <FileSearch className="h-4 w-4 text-cyan-400" />
+            <h3 className="text-sm font-bold tracking-tight text-white">
+              Hallazgos del caso
+            </h3>
+            <span className="rounded-sm border border-[#1E293B] bg-[#0F172A] px-2 py-0.5 font-mono text-[10px] text-slate-400">
+              {campaign.hallazgos?.length ?? 0} registros verificados
+            </span>
+          </div>
+
+          {Array.isArray(campaign.hallazgos) && campaign.hallazgos.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 gap-2.5 xl:grid-cols-2">
+                {campaign.hallazgos.map((h, i) => {
+                  const ver =
+                    h.nivel_verificacion === 'HECHO'
+                      ? { label: 'HECHO', cls: 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300' }
+                      : h.nivel_verificacion === 'HIPOTESIS'
+                      ? { label: 'HIPÓTESIS', cls: 'border-amber-500/40 bg-amber-950/40 text-amber-300' }
+                      : { label: 'PREGUNTA', cls: 'border-rose-500/40 bg-rose-950/40 text-rose-300' };
+                  return (
+                    <div key={i} className="rounded-sm border border-[#1E293B] bg-[#111827] p-3.5">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <span className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold ${ver.cls}`}>
+                          {ver.label}
+                        </span>
+                        {h.fecha_evento && (
+                          <span className="font-mono text-[10px] text-slate-500">{h.fecha_evento}</span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-xs leading-relaxed text-slate-200">{h.titulo}</p>
+                      <div className="mt-2 space-y-1 text-[10px] text-slate-400">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-slate-500">Fuente:</span>
+                          <span className="text-cyan-300/90">{h.fuente || '—'}</span>
+                          {h.url && (
+                            <a
+                              href={h.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-0.5 text-cyan-400 hover:text-cyan-200"
+                            >
+                              <ExternalLink className="h-3 w-3" /> verificar
+                            </a>
+                          )}
+                        </div>
+                        {h.canal && (
+                          <div>
+                            <span className="text-slate-500">Canal/verificador: </span>
+                            <span className="font-mono text-slate-300">@{h.canal}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-[10px] text-slate-500">
+                Hallazgos reconstruidos desde documentación pública de verificadores (ej. Mal​dita, Newtral, EFE). El nivel de verificación refleja el estado documental de cada afirmación.
+              </p>
+            </>
+          ) : (
+            <div className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-4 text-xs text-slate-400">
+              Este caso no expone hallazgos individuales en la vista. Revisa el Informe Técnico (PDF) o el expediente.
             </div>
-            <h3 className="text-sm font-bold tracking-tight text-cyan-200">Matriz de Confianza</h3>
-            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">nivel de verificación de los hallazgos</span>
-          </div>
-          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-            {campaign.confidenceMatrix.map((cm, i) => {
-              const lvl = cm.confidenceLevel || 'UNKNOWN_UNVERIFIED';
-              const cfg =
-                lvl === 'HIGH'
-                  ? { label: 'ALTA', badge: 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300', bar: 'bg-emerald-500' }
-                  : lvl === 'MEDIUM'
-                  ? { label: 'MEDIA', badge: 'border-amber-500/40 bg-amber-950/40 text-amber-300', bar: 'bg-amber-500' }
-                  : lvl === 'LOW'
-                  ? { label: 'BAJA', badge: 'border-orange-500/40 bg-orange-950/40 text-orange-300', bar: 'bg-orange-500' }
-                  : { label: 'NO VERIFICADO', badge: 'border-rose-500/40 bg-rose-950/40 text-rose-300', bar: 'bg-rose-500' };
-              return (
-                <div key={i} className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-slate-200">{cm.dimension}</span>
-                    <span className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold ${cfg.badge}`}>
-                      CONFIANZA {cfg.label}
-                    </span>
-                  </div>
-                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
-                    <div className={`h-full ${cfg.bar}`} style={{ width: lvl === 'HIGH' ? '90%' : lvl === 'MEDIUM' ? '55%' : lvl === 'LOW' ? '25%' : '8%' }}></div>
-                  </div>
-                  {cm.technicalGrounding && (
-                    <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
-                      <span className="font-semibold text-slate-300">Fundamento técnico: </span>
-                      {cm.technicalGrounding}
-                    </p>
-                  )}
-                  {cm.caveatsAndLimitations && (
-                    <p className="mt-1.5 flex items-start gap-1.5 text-[11px] leading-relaxed text-amber-300/90">
-                      <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
-                      <span>{cm.caveatsAndLimitations}</span>
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          )}
         </div>
       )}
 
+      {/* SECCIÓN: EXPEDIENTE (briefing + matriz de confianza) */}
+      {section === 'expediente' && (
+        <div className="space-y-5">
+          {campaign.summaryDescription && (
+            <div className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-4">
+              <span className="block text-[10px] font-mono uppercase tracking-widest text-slate-400 mb-1">
+                Resumen de expediente
+              </span>
+              <p className="text-xs leading-relaxed text-slate-300">{campaign.summaryDescription}</p>
+            </div>
+          )}
+
+          {/* Matriz de Confianza (nivel de verificación y limitaciones) */}
+          {Array.isArray(campaign.confidenceMatrix) && campaign.confidenceMatrix.length > 0 && (
+            <div className="rounded-sm border border-cyan-500/30 bg-[#0A0F1E] p-4">
+              <div className="mb-3 flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-sm border border-cyan-500/40 bg-cyan-950/40 text-cyan-400">
+                  <Info className="h-3.5 w-3.5" />
+                </div>
+                <h3 className="text-sm font-bold tracking-tight text-cyan-200">Matriz de Confianza</h3>
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">nivel de verificación de los hallazgos</span>
+              </div>
+              <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+                {campaign.confidenceMatrix.map((cm, i) => {
+                  const lvl = cm.confidenceLevel || 'UNKNOWN_UNVERIFIED';
+                  const cfg =
+                    lvl === 'HIGH'
+                      ? { label: 'ALTA', badge: 'border-emerald-500/40 bg-emerald-950/40 text-emerald-300', bar: 'bg-emerald-500' }
+                      : lvl === 'MEDIUM'
+                      ? { label: 'MEDIA', badge: 'border-amber-500/40 bg-amber-950/40 text-amber-300', bar: 'bg-amber-500' }
+                      : lvl === 'LOW'
+                      ? { label: 'BAJA', badge: 'border-orange-500/40 bg-orange-950/40 text-orange-300', bar: 'bg-orange-500' }
+                      : { label: 'NO VERIFICADO', badge: 'border-rose-500/40 bg-rose-950/40 text-rose-300', bar: 'bg-rose-500' };
+                  return (
+                    <div key={i} className="rounded-sm border border-[#1E293B] bg-[#0F172A] p-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs font-bold text-slate-200">{cm.dimension}</span>
+                        <span className={`rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold ${cfg.badge}`}>
+                          CONFIANZA {cfg.label}
+                        </span>
+                      </div>
+                      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
+                        <div className={`h-full ${cfg.bar}`} style={{ width: lvl === 'HIGH' ? '90%' : lvl === 'MEDIUM' ? '55%' : lvl === 'LOW' ? '25%' : '8%' }}></div>
+                      </div>
+                      {cm.technicalGrounding && (
+                        <p className="mt-2 text-[11px] leading-relaxed text-slate-400">
+                          <span className="font-semibold text-slate-300">Fundamento técnico: </span>
+                          {cm.technicalGrounding}
+                        </p>
+                      )}
+                      {cm.caveatsAndLimitations && (
+                        <p className="mt-1.5 flex items-start gap-1.5 text-[11px] leading-relaxed text-amber-300/90">
+                          <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" />
+                          <span>{cm.caveatsAndLimitations}</span>
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* SECCIÓN: PROTOCOLO DE RESPUESTA (roadmap + deep-dive + checklist) */}
+      {section === 'protocolo' && (
+      <>
       {/* Action Roadmap Progress: 5 Consecutive Steps */}
       <div className="mb-6 grid grid-cols-1 gap-2.5 sm:grid-cols-5">
         {[
@@ -342,9 +464,9 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
       </div>
 
       {/* Detailed Phase Interactive View */}
-      <div className="mb-6 grid grid-cols-1 gap-6">
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Full width: Selected Phase Deep-Dive */}
-        <div className="space-y-4">
+        <div className="space-y-4 lg:col-span-2">
           {selectedPhase === 1 && (
             <div className="rounded-sm border border-[#1E293B] bg-[#111827] p-5 space-y-4">
               <div className="flex items-center justify-between border-b border-[#1E293B] pb-3">
@@ -621,6 +743,8 @@ Emitido por el Grupo de Análisis OSINT — AegisNet-BotRadar
           </div>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 };

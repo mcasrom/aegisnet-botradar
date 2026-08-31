@@ -6,7 +6,6 @@
 import React from 'react';
 import {
   ShieldAlert,
-  Radio,
   Network,
   Clock,
   FileText,
@@ -36,8 +35,8 @@ interface NavbarProps {
   campaigns: InvestigationCampaign[];
   activeCampaign: InvestigationCampaign;
   onSelectCampaign: (campaign: InvestigationCampaign) => void;
-  activeTab: 'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about';
-  onChangeTab: (tab: 'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about') => void;
+  activeTab: 'graph' | 'temporal' | 'nlp' | 'action' | 'about';
+  onChangeTab: (tab: 'graph' | 'temporal' | 'nlp' | 'action' | 'about') => void;
   onOpenIngestion: () => void;
   onOpenArchitecture: () => void;
   onOpenReportModal: () => void;

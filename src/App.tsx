@@ -10,7 +10,6 @@ import { Navbar } from './components/Navbar';
 import { NetworkGraph } from './components/NetworkGraph';
 import { TemporalAnalysisView } from './components/TemporalAnalysisView';
 import { SemanticNLPView } from './components/SemanticNLPView';
-import { GeopoliticalMapView } from './components/GeopoliticalMapView';
 import { OSINTActionLineView } from './components/OSINTActionLineView';
 import { NodeInspectorModal } from './components/NodeInspectorModal';
 import { DataIngestionModal } from './components/DataIngestionModal';
@@ -36,7 +35,7 @@ export default function App() {
   const [dataSource, setDataSource] = useState<string>('backend no conectado');
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
   const [appVersion, setAppVersion] = useState<string>('1.2.0');
-  const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'geo' | 'action' | 'about'>('action');
+  const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'action' | 'about'>('action');
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(true);
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
@@ -103,7 +102,7 @@ export default function App() {
       nodes: updatedNodes,
       edges: updatedEdges,
       cibBreakdown: updatedCIB,
-      totalCollectedEvents: activeCampaign.totalCollectedEvents + newNodes.length * 12
+      totalCollectedEvents: activeCampaign.totalCollectedEvents + newNodes.length
     };
 
     setActiveCampaign(updatedCampaign);
@@ -158,10 +157,6 @@ export default function App() {
 
         {activeTab === 'nlp' && (
           <SemanticNLPView campaign={activeCampaign} />
-        )}
-
-        {activeTab === 'geo' && (
-          <GeopoliticalMapView campaign={activeCampaign} />
         )}
 
         {activeTab === 'action' && (

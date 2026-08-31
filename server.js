@@ -265,7 +265,20 @@ function buildCaseCampaign(file) {
       }
     ],
     summaryDescription: data.descripcion || '',
-    totalCollectedEvents: hallazgos.length
+    totalCollectedEvents: hallazgos.length,
+    hallazgos: hallazgos.map((h) => ({
+      tipo: h.tipo || 'documentado',
+      canal: h.canal || h.fuente || '',
+      titulo: h.titulo || '',
+      url: h.url || '',
+      fuente: h.fuente || '',
+      entidad: h.entidad || slug,
+      nivel_verificacion: h.nivel_verificacion || 'PREGUNTA',
+      fecha_evento: h.fecha_evento || null,
+      ts: h.ts || null,
+      señal_severa: !!h.señal_severa,
+      envio_masivo: !!h.envio_masivo
+    }))
   };
 }
 
