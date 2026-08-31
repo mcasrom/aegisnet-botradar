@@ -44,6 +44,8 @@ interface OSINTActionLineProps {
   health?: HealthResponse | null;
   isDemo?: boolean;
   version?: string;
+  section?: 'hallazgos' | 'expediente' | 'protocolo';
+  onSectionChange?: (s: 'hallazgos' | 'expediente' | 'protocolo') => void;
 }
 
 export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
@@ -52,10 +54,17 @@ export const OSINTActionLineView: React.FC<OSINTActionLineProps> = ({
   onOpenHowTo,
   health,
   isDemo,
-  version = '1.3.0'
+  version = '1.3.0',
+  section: controlledSection,
+  onSectionChange
 }) => {
   const [selectedPhase, setSelectedPhase] = useState<number>(1);
-  const [section, setSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
+  const [internalSection, setInternalSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
+  const section = controlledSection ?? internalSection;
+  const setSection = (s: 'hallazgos' | 'expediente' | 'protocolo') => {
+    if (onSectionChange) onSectionChange(s);
+    else setInternalSection(s);
+  };
   const [copiedTakedown, setCopiedTakedown] = useState(false);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({
     sha256_verified: true,

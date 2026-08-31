@@ -36,6 +36,7 @@ export default function App() {
   const [healthInfo, setHealthInfo] = useState<HealthResponse | null>(null);
   const [appVersion, setAppVersion] = useState<string>('1.3.0');
   const [activeTab, setActiveTab] = useState<'graph' | 'temporal' | 'nlp' | 'action' | 'about'>('action');
+  const [actionSection, setActionSection] = useState<'hallazgos' | 'expediente' | 'protocolo'>('hallazgos');
   const [isWelcomeOpen, setIsWelcomeOpen] = useState<boolean>(true);
 
   // Cargar campañas REALES desde el backend; si falla, queda en modo demo.
@@ -138,7 +139,16 @@ export default function App() {
       />
 
       {/* Funnel global: qué gestiona la página (visible en todas las tabs) */}
-      <FunnelBanner version={appVersion} campaignTitle={activeCampaign.title} health={healthInfo} isDemo={isDemo} />
+      <FunnelBanner
+        version={appVersion}
+        campaignTitle={activeCampaign.title}
+        health={healthInfo}
+        isDemo={isDemo}
+        onNavigate={(s) => {
+          setActiveTab('action');
+          setActionSection(s);
+        }}
+      />
 
       {/* Main View Area (Switched by Tabs) */}
       <main className="relative flex flex-1 overflow-hidden">
@@ -170,6 +180,8 @@ export default function App() {
             health={healthInfo}
             isDemo={isDemo}
             version={appVersion}
+            section={actionSection}
+            onSectionChange={setActionSection}
           />
         )}
 

@@ -14,9 +14,10 @@ interface FunnelBannerProps {
   campaignTitle?: string;
   health?: HealthResponse | null;
   isDemo?: boolean;
+  onNavigate?: (section: 'expediente' | 'hallazgos' | 'protocolo') => void;
 }
 
-export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTitle, health, isDemo }) => {
+export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTitle, health, isDemo, onNavigate }) => {
   return (
     <div className="shrink-0 border-b border-cyan-500/30 bg-[#0B1120]">
       {/* Barra superior: título + versión + semáforo */}
@@ -39,24 +40,36 @@ export const FunnelBanner: React.FC<FunnelBannerProps> = ({ version, campaignTit
         </div>
       </div>
 
-      {/* Funnel visible siempre: 3 pasos en una fila compacta horizontal */}
+      {/* Funnel visible siempre: 3 pasos en una fila compacta horizontal (clicable) */}
       <div className="border-t border-[#1E293B] bg-gradient-to-r from-[#06253a] to-[#0A0C10] px-4 py-1.5 sm:px-8">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-1.5 sm:grid-cols-3">
-          <div className="flex items-center gap-2 rounded-md border border-cyan-500/25 bg-[#0A0C10]/80 px-2.5 py-1">
+          <button
+            onClick={() => onNavigate?.('expediente')}
+            className="flex items-center gap-2 rounded-md border border-cyan-500/25 bg-[#0A0C10]/80 px-2.5 py-1 text-left transition-colors hover:border-cyan-500/60 hover:bg-cyan-950/30"
+            title="Ir al expediente técnico / fuentes monitorizadas"
+          >
             <Radar className="h-3.5 w-3.5 shrink-0 text-cyan-400" />
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider text-cyan-400">1 · Monitoriza</span>
-            <span className="hidden truncate text-[11px] text-slate-400 lg:inline">verificadores, Telegram, Bluesky, Mastodon</span>
-          </div>
-          <div className="flex items-center gap-2 rounded-md border border-indigo-500/25 bg-[#0A0C10]/80 px-2.5 py-1">
+            <span className="whitespace-nowrap font-mono text-[10px] font-black uppercase tracking-wider text-cyan-400">1 · Monitoriza</span>
+            <span className="hidden truncate text-[11px] text-slate-400 lg:inline">expediente técnico y fuentes</span>
+          </button>
+          <button
+            onClick={() => onNavigate?.('hallazgos')}
+            className="flex items-center gap-2 rounded-md border border-indigo-500/25 bg-[#0A0C10]/80 px-2.5 py-1 text-left transition-colors hover:border-indigo-500/60 hover:bg-indigo-950/30"
+            title="Ir a los hallazgos detectados"
+          >
             <FileSearch className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider text-indigo-400">2 · Detecta</span>
-            <span className="hidden truncate text-[11px] text-slate-400 lg:inline">duplicación, sincronía, topología, score CIB</span>
-          </div>
-          <div className="flex items-center gap-2 rounded-md border border-emerald-500/25 bg-[#0A0C10]/80 px-2.5 py-1">
+            <span className="whitespace-nowrap font-mono text-[10px] font-black uppercase tracking-wider text-indigo-400">2 · Detecta</span>
+            <span className="hidden truncate text-[11px] text-slate-400 lg:inline">hallazgos y evidencia</span>
+          </button>
+          <button
+            onClick={() => onNavigate?.('protocolo')}
+            className="flex items-center gap-2 rounded-md border border-emerald-500/25 bg-[#0A0C10]/80 px-2.5 py-1 text-left transition-colors hover:border-emerald-500/60 hover:bg-emerald-950/30"
+            title="Ir al protocolo de respuesta documentado"
+          >
             <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-            <span className="font-mono text-[10px] font-black uppercase tracking-wider text-emerald-400">3 · Documenta</span>
-            <span className="hidden truncate text-[11px] text-slate-400 lg:inline">HECHO/HIPÓTESIS/PREGUNTA, SHA-256, matriz</span>
-          </div>
+            <span className="whitespace-nowrap font-mono text-[10px] font-black uppercase tracking-wider text-emerald-400">3 · Documenta</span>
+            <span className="hidden truncate text-[11px] text-slate-400 lg:inline">protocolo de respuesta</span>
+          </button>
         </div>
 
         {/* Cintillo de principios */}
