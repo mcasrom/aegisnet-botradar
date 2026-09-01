@@ -63,11 +63,11 @@ export const TemporalAnalysisView: React.FC<TemporalAnalysisViewProps> = ({ camp
                 key={m}
                 type="button"
                 onClick={() => setFilterMode(m)}
-                className={`px-2.5 py-1.5 text-[11px] font-semibold capitalize transition-colors ${
+                className={`px-2.5 py-1.5 text-[11px] font-semibold transition-colors ${
                   filterMode === m ? 'bg-indigo-900/40 text-indigo-300' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {m}
+                {m === 'all' ? 'Todas' : m === 'bots' ? 'Con señal de auto.' : 'Orgánicas'}
               </button>
             ))}
           </div>
