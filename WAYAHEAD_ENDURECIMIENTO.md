@@ -62,3 +62,30 @@ que alguien esté mirando, que avise cuando algo falla, y que no mienta nunca.
 Ninguna de estas tareas inventa datos ni maquilla: son protecciones para que el sistema
 siga siendo honesto cuando algo falla (avisa en vez de mentir). El objetivo es que un
 fallo se detecte en minutos, no en dias.
+
+## 2026-09-01 — Mantenimiento de la plataforma (banner temporal)
+
+**Situación:** AegisNet está en fase de reconfiguración/endurecimiento; aún no está
+operativo para uso público. Se han detectado accesos externos intentando entrar.
+
+**Acción aplicada:**
+- Banner "En Mantenimiento" temporal en `/var/www/aegis/index.html`
+  (plantilla versionada en `public/mantenimiento.html`).
+- El banner incluye: título AegisNet-BotRadar, spinner, mensaje "Volvemos en
+  unos minutos", mailto aegis.info@viajeinteligencia.com, footer del ecosistema.
+- `noindex,nofollow` para que Google no indexe el banner como contenido.
+- **Backup** del index real: `/var/www/aegis/index.html.original-20260901`
+  (propiedad www-data).
+- **La API `/api/` NO se tocó** (nginx intacto) — si algún cliente interno la
+  usa, sigue respondiendo.
+
+**Restauración cuando termine el mantenimiento:**
+```bash
+sudo cp /var/www/aegis/index.html.original-20260901 /var/www/aegis/index.html
+```
+(El backup vive en el server; la plantilla del banner queda versionada en
+`public/mantenimiento.html` para reutilizarla si hace falta.)
+
+**Nota:** no se hizo 503 por nginx (decisión de no tocar la config); se prefirió
+un banner estático reversible. Si en el futuro se quiere un 503 "limpio" para
+buscadores, es una tarea aparte (editar el vhost aegis).
